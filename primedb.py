@@ -83,6 +83,8 @@ def setup ():
     Rarity(name='Uncommon', ordinal=1).save()
     Rarity(name='Rare', ordinal=2).save()
 
+    ItemType(name='Prime').save()
+
 def open_ ():
     needs_setup = not os.path.isfile(DB_PATH)
     _primedb.connect()
@@ -98,21 +100,59 @@ def populate ():
     r = http.request('GET', 'http://warframe.wikia.com/wiki/Void_Relic/ByRewards/SimpleTable')
     tablerows = BeautifulSoup(r.data, parse_only=SoupStrainer('tr'))
 
-    tier_records={}
-    for tier in RelicTier.select():
-        tier_records[tier.name] = tier
+    tier_records={tier.name: tier for tier in
+                  [RelicTier.get(ordinal=n) for n in range(4)]}
+    rarity_records={rarity.name: rarity for rarity in
+                    [Rarity.get(ordinal=n) for n in range(3)]}
+    prime_type = ItemType.get(name='Prime')
 
     for row in tablerows.contents[2:]:
         contents = row.contents
-        product = contents[1].text.strip()
-        part = contents[2].text.strip()
-        name = product + ' ' + part
+
+        # Parse Row #
+        product_name = contents[1].text.strip()
+        part_name = contents[2].text.strip()
+        full_name = product_name + ' ' + part_name
         relic_tier = tier_records[contents[3].text.strip()]
         relic_code = contents[4].text.strip()
-        
+        rarity = rarity_records[contents[5].text.strip()]
+        valuted = contents[6].text.strip() == 'Yes'
 
-    return tablerows
+        print("={}=".format(full_name))
 
+        # Identify Product and Create if Needed #
+        product_selection = Item.select().where(Item.name == product_name)
+        if product_selection.count() == 0:
+            product = Item.create(name=product_name, type_=prime_type)
+        else:
+            product = product_selection[0]
+
+        # Identify Relic and Create if Needed #
+        relic_selection = Relic.select().where(Relic.tier == relic_tier
+                                               and Relic.code == relic_code)
+        if relic_selection.count() == 0:
+            relic = Relic.create(tier=relic_tier, code=relic_code)
+        else:
+            relic = relic_selection[0]
+
+        # Identify Item and Create if Needed #
+        item_selection = Item.select().where(Item.name == full_name)
+        if item_selection.count() == 0:
+            item = Item.create(name=full_name, type_=prime_type)
+        else:
+            item = item_selection[0]
+
+        # Create Relations #
+        BuildRequirement(needs=item, builds=product).save()
+        Containment(contains=item, inside=relic, rarity=rarity).save()
+
+try:
+    os.remove(DB_PATH)
+except Exception:
+    pass
+
+print("==POPULATING==")
 open_()
-rows = populate()
+populate()
 close()
+print("==DONE==")
