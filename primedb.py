@@ -1,4 +1,6 @@
 from peewee import *
+from bs4 import BeautifulSoup, SoupStrainer
+import urllib3
 
 DB_PATH = 'primedb.sqlite'
 
@@ -82,4 +84,24 @@ def close ():
 
 
 # Population Code #
-def populate
+def populate ():
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'http://warframe.wikia.com/wiki/Void_Relic/ByRewards/SimpleTable')
+    tablerows = BeautifulSoup(r.data, parse_only=SoupStrainer('tr'))
+
+    tier_records={}
+    for tier in RelicTier.select():
+        tier_records[tier.name] = tier
+
+    for row in rows.contents[2:]:
+        contents = row.contents
+        product = contents[1].text.strip()
+        part = contents[2].text.strip()
+        name = product + ' ' + part
+        relic_tier = tier_records[contents[3].text.strip()]
+        relic_code = contents[4].text.strip()
+        
+
+    return tablerows
+
+rows = populate()
