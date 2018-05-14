@@ -30,13 +30,16 @@ class Item (DataModel):
 class RelicTier (DataModel):
     ordinal = SmallIntegerField(unique=True)
 
+class Rarity (DataModel):
+    ordinal = SmallIntegerField(unique=True)
+
 class Relic (DataModel):
     tier = ForeignKeyField(RelicTier)
     code = CharField(max_length=2)
     vaulted = BooleanField(default=False)
 
     class Meta:
-        indexes = ((('tier', 'code'), True))
+        indexes = ( (('tier', 'code'), True), )
 
     @property
     def name (self):
@@ -59,6 +62,7 @@ class BuildRequirement (RelationModel):
 class Containment (RelationModel):
     contains = ForeignKeyField(Item, backref='relics')
     inside = ForeignKeyField(Relic, backref='contents')
+    rarity = ForeignKeyField(Rarity)
 
 # class Drop (RelationModel):
 #     drops = ForeignKeyField(Relic)
@@ -67,14 +71,19 @@ class Containment (RelationModel):
 
 # Initialization Code #
 def setup ():
-    _primedb.create_tables([ItemType, Item, RelicTier, Relic])
+    _primedb.create_tables([ItemType, Item, RelicTier, Relic, Rarity,
+                            BuildRequirement, Containment])
 
     RelicTier(name='Lith', ordinal=0).save()
     RelicTier(name='Meso', ordinal=1).save()
     RelicTier(name='Neo',  ordinal=2).save()
     RelicTier(name='Axi',  ordinal=3).save()
 
-def open ():
+    Rarity(name='Common', ordinal=0).save()
+    Rarity(name='Uncommon', ordinal=1).save()
+    Rarity(name='Rare', ordinal=2).save()
+
+def open_ ():
     needs_setup = not os.path.isfile(DB_PATH)
     _primedb.connect()
     if needs_setup: setup()
@@ -93,7 +102,7 @@ def populate ():
     for tier in RelicTier.select():
         tier_records[tier.name] = tier
 
-    for row in rows.contents[2:]:
+    for row in tablerows.contents[2:]:
         contents = row.contents
         product = contents[1].text.strip()
         part = contents[2].text.strip()
@@ -104,4 +113,6 @@ def populate ():
 
     return tablerows
 
+open_()
 rows = populate()
+close()
