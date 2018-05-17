@@ -58,11 +58,15 @@ class BuildRequirement (RelationModel):
     builds = ForeignKeyField(Item, backref='components')
     need_count = IntegerField(default=1)
     build_count = IntegerField(default=1)
+    class Meta:
+        indexes = ( (('needs', 'builds'), True), )
 
 class Containment (RelationModel):
     contains = ForeignKeyField(Item, backref='relics')
     inside = ForeignKeyField(Relic, backref='contents')
     rarity = ForeignKeyField(Rarity)
+    # class Meta:
+    #     indexes = ( (('contains', 'inside'), True), )
 
 # class Drop (RelationModel):
 #     drops = ForeignKeyField(Relic)
@@ -108,7 +112,7 @@ def populate ():
 
     for row in tablerows.contents[2:]:
         contents = row.contents
-
+        
         # Parse Row #
         product_name = contents[1].text.strip()
         part_name = contents[2].text.strip()
@@ -118,20 +122,23 @@ def populate ():
         rarity = rarity_records[contents[5].text.strip()]
         valuted = contents[6].text.strip() == 'Yes'
 
-        print("={}=".format(full_name))
+        # print("={}=".format(full_name))
 
         # Identify Product and Create if Needed #
         product_selection = Item.select().where(Item.name == product_name)
         if product_selection.count() == 0:
             product = Item.create(name=product_name, type_=prime_type)
+            # print("! {}".format(product))
         else:
             product = product_selection[0]
 
         # Identify Relic and Create if Needed #
-        relic_selection = Relic.select().where(Relic.tier == relic_tier
-                                               and Relic.code == relic_code)
+        relic_selection = Relic.select().where(Relic.tier == relic_tier)\
+                                        .where(Relic.code == relic_code)
+        # print("{}".format([r.name for r in relic_selection]))
         if relic_selection.count() == 0:
             relic = Relic.create(tier=relic_tier, code=relic_code)
+            # print("! {}".format(relic))
         else:
             relic = relic_selection[0]
 
@@ -139,12 +146,15 @@ def populate ():
         item_selection = Item.select().where(Item.name == full_name)
         if item_selection.count() == 0:
             item = Item.create(name=full_name, type_=prime_type)
+            # print("! {}".format(item))
+            BuildRequirement(needs=item, builds=product).save()
         else:
             item = item_selection[0]
 
-        # Create Relations #
-        BuildRequirement(needs=item, builds=product).save()
+        # Create Relic Containment Relation #
+        # print("{} in {}".format(item, relic))
         Containment(contains=item, inside=relic, rarity=rarity).save()
+
 
 try:
     os.remove(DB_PATH)
