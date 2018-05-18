@@ -25,6 +25,7 @@ class ItemType (DataModel):
 
 class Item (DataModel):
     type_ = ForeignKeyField(ItemType, backref='items')
+    needed = IntegerField(default=0)
     # ducats = IntegerField(default=0)
 
 class RelicTier (DataModel):
@@ -99,7 +100,7 @@ def close ():
 
 
 # Population Code #
-def populate ():
+def populate (list_all=False):
     http = urllib3.PoolManager()
     r = http.request('GET', 'http://warframe.wikia.com/wiki/Void_Relic/ByRewards/SimpleTable')
     tablerows = BeautifulSoup(r.data, parse_only=SoupStrainer('tr'))
@@ -122,7 +123,7 @@ def populate ():
         rarity = rarity_records[contents[5].text.strip()]
         valuted = contents[6].text.strip() == 'Yes'
 
-        # print("={}=".format(full_name))
+        if list_all: print("={}=".format(full_name))
 
         # Identify Product and Create if Needed #
         product_selection = Item.select().where(Item.name == product_name)
@@ -163,6 +164,6 @@ except Exception:
 
 print("==POPULATING==")
 open_()
-populate()
+populate(True)
 close()
 print("==DONE==")
