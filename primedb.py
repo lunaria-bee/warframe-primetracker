@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup, SoupStrainer
 import urllib3
 
 DB_PATH = 'primedb.sqlite'
+WIKI_HOME = 'http://warframe.wikia.com/'
 
 _primedb = SqliteDatabase(DB_PATH)
 
@@ -26,7 +27,11 @@ class ItemType (DataModel):
 class Item (DataModel):
     type_ = ForeignKeyField(ItemType, backref='items')
     needed = IntegerField(default=0)
+    page = TextField(null = True)
     # ducats = IntegerField(default=0)
+    @property
+    def soup (self):
+        return BeautifulSoup(page, parser='lxml')
 
 class RelicTier (DataModel):
     ordinal = SmallIntegerField(unique=True)
@@ -104,7 +109,6 @@ def populate (list_all=False):
     http = urllib3.PoolManager()
     r = http.request('GET', 'http://warframe.wikia.com/wiki/Void_Relic/ByRewards/SimpleTable')
     tablerows = BeautifulSoup(r.data, parse_only=SoupStrainer('tr'))
-
     tier_records={tier.name: tier for tier in
                   [RelicTier.get(ordinal=n) for n in range(4)]}
     rarity_records={rarity.name: rarity for rarity in
@@ -116,6 +120,7 @@ def populate (list_all=False):
         
         # Parse Row #
         product_name = contents[1].text.strip()
+        product_url = WIKI_HOME + contents[1].a['href']
         part_name = contents[2].text.strip()
         full_name = product_name + ' ' + part_name
         relic_tier = tier_records[contents[3].text.strip()]
@@ -128,7 +133,8 @@ def populate (list_all=False):
         # Identify Product and Create if Needed #
         product_selection = Item.select().where(Item.name == product_name)
         if product_selection.count() == 0:
-            product = Item.create(name=product_name, type_=prime_type)
+            product = Item.create(name=product_name, type_=prime_type,
+                                  page=http.request('GET', product_url))
             # print("! {}".format(product))
         else:
             product = product_selection[0]
