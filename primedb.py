@@ -29,9 +29,10 @@ class Item (DataModel):
     needed = IntegerField(default=0)
     page = TextField(null = True)
     # ducats = IntegerField(default=0)
+
     @property
     def soup (self):
-        return BeautifulSoup(page, parser='lxml')
+        return BeautifulSoup(self.page)
 
 class RelicTier (DataModel):
     ordinal = SmallIntegerField(unique=True)
@@ -134,7 +135,7 @@ def populate (list_all=False):
         product_selection = Item.select().where(Item.name == product_name)
         if product_selection.count() == 0:
             product = Item.create(name=product_name, type_=prime_type,
-                                  page=http.request('GET', product_url))
+                                  page=http.request('GET', product_url).data)
             # print("! {}".format(product))
         else:
             product = product_selection[0]
@@ -163,6 +164,7 @@ def populate (list_all=False):
         Containment(contains=item, inside=relic, rarity=rarity).save()
 
 
+# Testing Code #
 try:
     os.remove(DB_PATH)
 except Exception:
