@@ -167,7 +167,9 @@ def populate (list_all=False):
 # Testing Code #
 try:
     os.remove(DB_PATH)
+    print("Removed {}", DB_PATH)
 except Exception:
+    print("{} not found", DB_PATH)
     pass
 
 print("==POPULATING==")
