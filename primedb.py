@@ -177,6 +177,6 @@ def __test_population ():
     except Exception:
         Logger.info("Database: {} not found".format(DB_PATH))
 
-        open_()
-        populate(True)
-        close()
+    open_()
+    populate(True)
+    close()
