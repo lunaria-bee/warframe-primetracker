@@ -1,5 +1,6 @@
 from peewee import *
 from bs4 import BeautifulSoup, SoupStrainer
+from kivy.logger import Logger
 import urllib3
 
 DB_PATH = 'primedb.sqlite'
@@ -32,7 +33,7 @@ class Item (DataModel):
 
     @property
     def soup (self):
-        return BeautifulSoup(self.page)
+        return BeautifulSoup(self.page, 'lxml')
 
 class RelicTier (DataModel):
     ordinal = SmallIntegerField(unique=True)
@@ -107,6 +108,8 @@ def close ():
 
 # Population Code #
 def populate (list_all=False):
+    Logger.debug("Database: Population: Started")
+
     http = urllib3.PoolManager()
     r = http.request('GET', 'http://warframe.wikia.com/wiki/Void_Relic/ByRewards/SimpleTable')
     tablerows = BeautifulSoup(r.data, parse_only=SoupStrainer('tr'))
@@ -129,7 +132,7 @@ def populate (list_all=False):
         rarity = rarity_records[contents[5].text.strip()]
         valuted = contents[6].text.strip() == 'Yes'
 
-        if list_all: print("={}=".format(full_name))
+        Logger.debug("Database: Population: Processing {} in {} {}".format(full_name, relic_tier, relic_code))
 
         # Identify Product and Create if Needed #
         product_selection = Item.select().where(Item.name == product_name)
@@ -163,17 +166,17 @@ def populate (list_all=False):
         # print("{} in {}".format(item, relic))
         Containment(contains=item, inside=relic, rarity=rarity).save()
 
+    Logger.debug("Database: Population: Completed")
+
 
 # Testing Code #
-try:
-    os.remove(DB_PATH)
-    print("Removed {}", DB_PATH)
-except Exception:
-    print("{} not found", DB_PATH)
-    pass
+def __test_population ():
+    try:
+        os.remove(DB_PATH)
+        Logger.info("Database: {} deleted".format(DB_PATH))
+    except Exception:
+        Logger.info("Database: {} not found".format(DB_PATH))
 
-print("==POPULATING==")
-open_()
-populate(True)
-close()
-print("==DONE==")
+        open_()
+        populate(True)
+        close()
