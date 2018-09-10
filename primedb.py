@@ -35,6 +35,22 @@ class Item (DataModel):
     def soup (self):
         return BeautifulSoup(self.page, 'lxml')
 
+    @property
+    def relics (self):
+        return [c.inside for c in self.containments]
+
+    @property
+    def builds (self):
+        return [b.builds for b in self.requirements]
+
+    @property
+    def requires (self):
+        return [b.requires for b in self.requirements]
+
+    @property
+    def vaulted (self):
+        return all([r.vaulted for r in self.relics])
+
 class RelicTier (DataModel):
     ordinal = SmallIntegerField(unique=True)
 
@@ -53,6 +69,10 @@ class Relic (DataModel):
     def name (self):
         return "{} {}".format(self.tier, self.code)
 
+    @property
+    def contents (self):
+        return [c.contains for c in self.containments]
+
 # class MissionSector (BaseModel):
 #     pass
 
@@ -62,16 +82,16 @@ class Relic (DataModel):
 
 # Relation Tables #
 class BuildRequirement (RelationModel):
-    needs = ForeignKeyField(Item, backref='products')
-    builds = ForeignKeyField(Item, backref='components')
+    needs = ForeignKeyField(Item, backref='requirements')
+    builds = ForeignKeyField(Item, backref='requirements')
     need_count = IntegerField(default=1)
     build_count = IntegerField(default=1)
     class Meta:
         indexes = ( (('needs', 'builds'), True), )
 
 class Containment (RelationModel):
-    contains = ForeignKeyField(Item, backref='relics')
-    inside = ForeignKeyField(Relic, backref='contents')
+    contains = ForeignKeyField(Item, backref='containments')
+    inside = ForeignKeyField(Relic, backref='containments')
     rarity = ForeignKeyField(Rarity)
     # class Meta:
     #     indexes = ( (('contains', 'inside'), True), )
@@ -130,7 +150,7 @@ def populate (list_all=False):
         relic_tier = tier_records[contents[3].text.strip()]
         relic_code = contents[4].text.strip()
         rarity = rarity_records[contents[5].text.strip()]
-        valuted = contents[6].text.strip() == 'Yes'
+        vaulted = contents[6].text.strip() == 'Yes'
 
         Logger.debug("Database: Population: Processing {} in {} {}".format(full_name, relic_tier, relic_code))
 
@@ -148,7 +168,7 @@ def populate (list_all=False):
                                         .where(Relic.code == relic_code)
         # print("{}".format([r.name for r in relic_selection]))
         if relic_selection.count() == 0:
-            relic = Relic.create(tier=relic_tier, code=relic_code)
+            relic = Relic.create(tier=relic_tier, code=relic_code, vaulted=vaulted)
             # print("! {}".format(relic))
         else:
             relic = relic_selection[0]
@@ -158,6 +178,7 @@ def populate (list_all=False):
         if item_selection.count() == 0:
             item = Item.create(name=full_name, type_=prime_type)
             # print("! {}".format(item))
+            print(item, product)
             BuildRequirement(needs=item, builds=product).save()
         else:
             item = item_selection[0]
@@ -171,6 +192,7 @@ def populate (list_all=False):
 
 # Testing Code #
 def __test_population ():
+    Logger.setLevel('INFO')
     try:
         os.remove(DB_PATH)
         Logger.info("Database: {} deleted".format(DB_PATH))
