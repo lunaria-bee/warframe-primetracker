@@ -146,31 +146,29 @@ def populate (list_all=False):
         # Parse Row #
         product_name = contents[1].text.strip()
         product_url = WIKI_HOME + contents[1].a['href']
-        part_name = contents[2].text.strip()
-        full_name = product_name + ' ' + part_name
+        part_name = contents[2].text.strip()       # e.g. "Chassis"
+        full_name = product_name + ' ' + part_name # e.g. "Volt Prime Chassis"
         relic_tier = tier_records[contents[3].text.strip()]
         relic_code = contents[4].text.strip()
         rarity = rarity_records[contents[5].text.strip()]
         vaulted = contents[6].text.strip() == 'Yes'
 
-        Logger.debug("Database: Population: Processing {} in {} {}".format(full_name, relic_tier, relic_code))
+        Logger.debug("Database: Population: Processing {} in {} {}"
+                     .format(full_name, relic_tier, relic_code))
 
         # Identify Product and Create if Needed #
         product_selection = Item.select().where(Item.name == product_name)
         if product_selection.count() == 0:
             product = Item.create(name=product_name, type_=prime_type,
                                   page=http.request('GET', product_url).data)
-            # print("! {}".format(product))
         else:
             product = product_selection[0]
 
         # Identify Relic and Create if Needed #
         relic_selection = Relic.select().where(Relic.tier == relic_tier)\
                                         .where(Relic.code == relic_code)
-        # print("{}".format([r.name for r in relic_selection]))
         if relic_selection.count() == 0:
             relic = Relic.create(tier=relic_tier, code=relic_code, vaulted=vaulted)
-            # print("! {}".format(relic))
         else:
             relic = relic_selection[0]
 
@@ -178,14 +176,12 @@ def populate (list_all=False):
         item_selection = Item.select().where(Item.name == full_name)
         if item_selection.count() == 0:
             item = Item.create(name=full_name, type_=prime_type)
-            # print("! {}".format(item))
             print(item, product)
             BuildRequirement(needs=item, builds=product).save()
         else:
             item = item_selection[0]
 
         # Create Relic Containment Relation #
-        # print("{} in {}".format(item, relic))
         Containment(contains=item, inside=relic, rarity=rarity).save()
 
     Logger.debug("Database: Population: Completed")
