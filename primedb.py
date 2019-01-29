@@ -1,7 +1,7 @@
 from peewee import *
 from bs4 import BeautifulSoup, SoupStrainer
 from kivy.logger import Logger
-import urllib3
+import certifi, urllib3
 
 DB_PATH = 'primedb.sqlite'
 WIKI_HOME = 'http://warframe.wikia.com/'
@@ -130,7 +130,8 @@ def close ():
 def populate (list_all=False):
     Logger.debug("Database: Population: Started")
 
-    http = urllib3.PoolManager()
+    http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
+                               ca_certs=certifi.where())
     r = http.request('GET', 'http://warframe.wikia.com/wiki/Void_Relic/ByRewards/SimpleTable')
     tablerows = BeautifulSoup(r.data, parse_only=SoupStrainer('tr'))
     tier_records={tier.name: tier for tier in
