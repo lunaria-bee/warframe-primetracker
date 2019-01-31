@@ -176,7 +176,8 @@ def populate (list_all=False):
         item_selection = Item.select().where(Item.name == full_name)
         if item_selection.count() == 0:
             item = Item.create(name=full_name, type_=prime_type)
-            print(item, product)
+            Logger.info("Database: entry ({}, {}) created".
+                        .format(item, product))
             BuildRequirement(needs=item, builds=product).save()
         else:
             item = item_selection[0]
