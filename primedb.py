@@ -4,7 +4,7 @@ from kivy.logger import Logger
 import certifi, urllib3
 
 DB_PATH = 'primedb.sqlite'
-WIKI_HOME = 'http://warframe.wikia.com/'
+WIKI_HOME = 'http://warframe.fandom.com'
 
 _primedb = SqliteDatabase(DB_PATH)
 
@@ -132,8 +132,8 @@ def populate (list_all=False):
 
     http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
                                ca_certs=certifi.where())
-    r = http.request('GET', 'http://warframe.wikia.com/wiki/Void_Relic/ByRewards/SimpleTable')
-    tablerows = BeautifulSoup(r.data, parse_only=SoupStrainer('tr'))
+    r = http.request('GET', WIKI_HOME + '/wiki/Void_Relic/ByRewards/SimpleTable')
+    tablerows = BeautifulSoup(r.data, 'lxml', parse_only=SoupStrainer('tr'))
     tier_records={tier.name: tier for tier in
                   [RelicTier.get(ordinal=n) for n in range(4)]}
     rarity_records={rarity.name: rarity for rarity in
@@ -142,7 +142,7 @@ def populate (list_all=False):
 
     for row in tablerows.contents[2:]:
         contents = row.contents
-        
+
         # Parse Row #
         product_name = contents[1].text.strip()
         product_url = WIKI_HOME + contents[1].a['href']
@@ -176,7 +176,7 @@ def populate (list_all=False):
         item_selection = Item.select().where(Item.name == full_name)
         if item_selection.count() == 0:
             item = Item.create(name=full_name, type_=prime_type)
-            Logger.info("Database: entry ({}, {}) created".
+            Logger.info("Database: entry ({}, {}) created"
                         .format(item, product))
             BuildRequirement(needs=item, builds=product).save()
         else:
