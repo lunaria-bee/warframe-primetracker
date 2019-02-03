@@ -200,3 +200,18 @@ def __test_population ():
     open_()
     populate(True)
     close()
+
+
+def __test_requirement_counts ():
+    # TODO merge with `populate`
+    Logger.setLevel('INFO')
+    open_()
+
+    for product in [p for p in Item.select() if # TODO do in one query
+                    BuildRequirement.select().where(BuildRequirement.builds==p)]:
+        soup = BeautifulSoup(product.page, 'lxml',
+                             parse_only=SoupStrainer(class_='foundrytable'))
+        for reqs in [r for r in soup.contents[1].contents[3].find_all('td') if r.a]:
+            Logger.info("Database: {} needs {} {}"
+                        .format(product.name, r.text.strip(), r.a['title'].strip()))
+            # TODO figure out why everything needs 1 link
