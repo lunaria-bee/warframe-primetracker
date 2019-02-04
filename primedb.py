@@ -208,10 +208,20 @@ def __test_requirement_counts ():
     open_()
 
     for product in [p for p in Item.select() if # TODO do in one query
-                    BuildRequirement.select().where(BuildRequirement.builds==p)]:
+                    BuildRequirement.select().where(BuildRequirement.builds==p)][:3]:
         soup = BeautifulSoup(product.page, 'lxml',
                              parse_only=SoupStrainer(class_='foundrytable'))
-        for reqs in [r for r in soup.contents[1].contents[3].find_all('td') if r.a]:
-            Logger.info("Database: {} needs {} {}"
-                        .format(product.name, r.text.strip(), r.a['title'].strip()))
-            # TODO figure out why everything needs 1 link
+        # print(soup.contents[1].contents[3].find_all('td'))
+        for req in [r for r in soup.contents[1].contents[3].find_all('td') if r.a]:
+            count = req.text.strip()
+            part_name = req.a['title'].strip()
+            part_query = Item.select().where(Item.name.contains(product.name)
+                                             & Item.name.contains(part_name))
+            if part_query:
+                part = part_query[0]
+                relation = (BuildRequirement.select()
+                            .where(BuildRequirement.builds==product
+                                   & BuildRequirement.needs==part))
+                if relation: print(relation[0])
+                Logger.info("Database: {} needs {} {}"
+                            .format(product.name, count, part.name))
