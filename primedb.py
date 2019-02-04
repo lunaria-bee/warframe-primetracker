@@ -215,8 +215,8 @@ def populate (list_all=False):
 
 
 # Testing Code #
-def __test_population ():
-    Logger.setLevel('INFO')
+def __test_population (log_level='INFO'):
+    Logger.setLevel(log_level)
     try:
         os.remove(DB_PATH)
         Logger.info("Database: {} deleted".format(DB_PATH))
