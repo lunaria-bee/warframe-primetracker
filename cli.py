@@ -1,13 +1,16 @@
 import primedb as db
 
+def get_yn (prompt="Yes or No?"):
+    yn = input("{} (y/n):  ".format(prompt))
+    while not yn in ('Y', 'y', 'N', 'n'):
+        yn = input("Please enter 'y' or 'n':  ")
+
 def initialize_collection ():
     for product in db.Item.select_products():
         requirements = (db.BuildRequirement.select()
                       .where(db.BuildRequirement.builds==product))
 
-        owned = input("Do you have {}? (y/n):  ".format(product))
-        while not owned in 'YyNn':
-            owned = input("Please enter 'y' or 'n':  ")
+        owned = get_yn("Do you have {}?".format(product))
 
         if owned in 'Nn':
             product.needed = 1
