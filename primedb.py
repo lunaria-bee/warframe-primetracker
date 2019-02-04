@@ -131,7 +131,7 @@ def close ():
 
 # Population Code #
 def populate (list_all=False):
-    Logger.debug("Database: Population: Started")
+    Logger.info("Database: Population: Started")
 
     http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
                                ca_certs=certifi.where())
@@ -180,7 +180,7 @@ def populate (list_all=False):
         item_selection = Item.select().where(Item.name == full_name)
         if item_selection.count() == 0:
             item = Item.create(name=full_name, type_=prime_type)
-            Logger.info("Database: entry ({}, {}) created"
+            Logger.debug("Database: entry ({}, {}) created"
                         .format(item, product))
             BuildRequirement(needs=item, builds=product).save()
         else:
@@ -208,14 +208,14 @@ def populate (list_all=False):
                 if relation and count:
                     relation[0].need_count=count
                     relation[0].save()
-                    Logger.info("Database: {} needs {} {}"
-                                .format(product.name, count, part.name))
+                    Logger.debug("Database: {} needs {} {}"
+                                 .format(product.name, count, part.name))
 
-    Logger.debug("Database: Population: Completed")
+    Logger.info("Database: Population: Completed")
 
 
 # Testing Code #
-def __test_population (log_level='INFO'):
+def __test_population (log_level='DEBUG'):
     Logger.setLevel(log_level)
     try:
         os.remove(DB_PATH)
