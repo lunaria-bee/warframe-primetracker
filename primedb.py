@@ -89,6 +89,9 @@ class BuildRequirement (RelationModel):
     class Meta:
         indexes = ( (('needs', 'builds'), True), )
 
+    def __repr__ (self):
+        return "<BuildRequirement: {} <- {}>".format(self.needs, self.builds)
+
 class Containment (RelationModel):
     contains = ForeignKeyField(Item, backref='containments')
     inside = ForeignKeyField(Relic, backref='containments')
