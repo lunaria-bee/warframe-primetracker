@@ -143,6 +143,7 @@ def populate (list_all=False):
                     [Rarity.get(ordinal=n) for n in range(3)]}
     prime_type = ItemType.get(name='Prime')
 
+    # Initial Population #
     for row in tablerows.contents[2:]:
         contents = row.contents
 
@@ -188,6 +189,28 @@ def populate (list_all=False):
         # Create Relic Containment Relation #
         Containment(contains=item, inside=relic, rarity=rarity).save()
 
+    # Calculate Required Part Quantities #
+    for product in [p for p in Item.select() if # TODO do in one query
+                BuildRequirement.select().where(BuildRequirement.builds==p)]:
+        foundry_table = BeautifulSoup(product.page, 'lxml',
+                                      parse_only=SoupStrainer(class_='foundrytable'))
+        # manually access the table row with build requirements
+        for req in [r for r in foundry_table.contents[1].contents[3].find_all('td') if r.a]:
+            count = req.text.strip()
+            part_name = req.a['title'].strip()
+            part_query = Item.select().where(Item.name.contains(product.name)
+                                             & Item.name.contains(part_name))
+            if part_query:
+                part = part_query[0]
+                relation = (BuildRequirement.select()
+                            .where((BuildRequirement.builds==product)
+                                   & (BuildRequirement.needs==part)))
+                if relation and count:
+                    relation[0].need_count=count
+                    relation[0].save()
+                    Logger.info("Database: {} needs {} {}"
+                                .format(product.name, count, part.name))
+
     Logger.debug("Database: Population: Completed")
 
 
@@ -203,28 +226,4 @@ def __test_population ():
     open_()
     populate(True)
     close()
-
-
-def __test_requirement_counts ():
-    # TODO merge with `populate`
-    Logger.setLevel('INFO')
-    open_()
-
-    for product in [p for p in Item.select() if # TODO do in one query
-                    BuildRequirement.select().where(BuildRequirement.builds==p)][:3]:
-        soup = BeautifulSoup(product.page, 'lxml',
-                             parse_only=SoupStrainer(class_='foundrytable'))
-        # print(soup.contents[1].contents[3].find_all('td'))
-        for req in [r for r in soup.contents[1].contents[3].find_all('td') if r.a]:
-            count = req.text.strip()
-            part_name = req.a['title'].strip()
-            part_query = Item.select().where(Item.name.contains(product.name)
-                                             & Item.name.contains(part_name))
-            if part_query:
-                part = part_query[0]
-                relation = (BuildRequirement.select()
-                            .where((BuildRequirement.builds==product)
-                                   & (BuildRequirement.needs==part)))
-                if relation: print(relation[0])
-                Logger.info("Database: {} needs {} {}"
-                            .format(product.name, count, part.name))
+    
