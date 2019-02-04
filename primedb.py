@@ -31,6 +31,11 @@ class Item (DataModel):
     page = TextField(null = True)
     # ducats = IntegerField(default=0)
 
+    @staticmethod
+    def select_products (self):
+        return [p for p in Item.select() if # TODO do in one query
+                BuildRequirement.select().where(BuildRequirement.builds==p)]
+
     @property
     def soup (self):
         return BeautifulSoup(self.page, 'lxml')
@@ -190,8 +195,7 @@ def populate (list_all=False):
         Containment(contains=item, inside=relic, rarity=rarity).save()
 
     # Calculate Required Part Quantities #
-    for product in [p for p in Item.select() if # TODO do in one query
-                BuildRequirement.select().where(BuildRequirement.builds==p)]:
+    for product in Item.select_products():
         foundry_table = BeautifulSoup(product.page, 'lxml',
                                       parse_only=SoupStrainer(class_='foundrytable'))
         # manually access the table row with build requirements
