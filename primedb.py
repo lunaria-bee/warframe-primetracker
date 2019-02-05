@@ -36,7 +36,7 @@ class Item (DataModel):
                 BuildRequirement.select().where(BuildRequirement.builds==p)]
 
     @staticmethod
-    def select_all_components (:
+    def select_all_components ():
         return [p for p in Item.select() if # TODO do in one query
                 BuildRequirement.select().where(BuildRequirement.needs==p)]
 
