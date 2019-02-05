@@ -27,14 +27,18 @@ class ItemType (DataModel):
 
 class Item (DataModel):
     type_ = ForeignKeyField(ItemType, backref='items')
-    needed = IntegerField(default=0)
     page = TextField(null = True)
     # ducats = IntegerField(default=0)
 
     @staticmethod
-    def select_products (self):
+    def select_all_products ():
         return [p for p in Item.select() if # TODO do in one query
                 BuildRequirement.select().where(BuildRequirement.builds==p)]
+
+    @staticmethod
+    def select_all_components (:
+        return [p for p in Item.select() if # TODO do in one query
+                BuildRequirement.select().where(BuildRequirement.needs==p)]
 
     @property
     def soup (self):
