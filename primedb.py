@@ -189,8 +189,6 @@ def populate (list_all=False):
         item_selection = Item.select().where(Item.name == full_name)
         if item_selection.count() == 0:
             item = Item.create(name=full_name, type_=prime_type)
-            Logger.debug("Database: entry ({}, {}) created"
-                        .format(item, product))
             BuildRequirement(needs=item, builds=product).save()
         else:
             item = item_selection[0]
@@ -199,11 +197,9 @@ def populate (list_all=False):
         Containment(contains=item, inside=relic, rarity=rarity).save()
 
     # Calculate Required Part Quantities #
-    for product in Item.select_products():
-        foundry_table = BeautifulSoup(product.page, 'lxml',
-                                      parse_only=SoupStrainer(class_='foundrytable'))
-        # manually access the table row with build requirements
-        for req in [r for r in foundry_table.contents[1].contents[3].find_all('td') if r.a]:
+    for product in Item.select_all_products():
+        foundry_table = product.soup.find('table', class_='foundrytable')
+        for req in [r for r in foundry_table.contents[3].find_all('td') if r.a]:
             count = req.text.strip()
             part_name = req.a['title'].strip()
             part_query = Item.select().where(Item.name.contains(product.name)
