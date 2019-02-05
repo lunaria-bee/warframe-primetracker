@@ -46,19 +46,19 @@ class Item (DataModel):
 
     @property
     def relics (self):
-        return [c.inside for c in self.containments]
+        return tuple(set(c.inside for c in self.containments))
 
     @property
     def builds (self):
-        return [b.builds for b in self.requirements]
+        return tuple(set(r.builds for r in self.requirements if r != self))
 
     @property
-    def requires (self):
-        return [b.requires for b in self.requirements]
+    def needs (self):
+        return tuple(set(r.needs for r in self.requirements if r != self))
 
     @property
     def vaulted (self):
-        return all([r.vaulted for r in self.relics])
+        return all(r.vaulted for r in self.relics)
 
 class RelicTier (DataModel):
     ordinal = SmallIntegerField(unique=True)
