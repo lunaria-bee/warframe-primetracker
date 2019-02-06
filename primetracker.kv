@@ -1,4 +1,28 @@
-#:kivy 1.0
+#:import Factory kivy.factory.Factory
 
-Label:
-    text: "This is some testing text."
+<InventoryInitPopup@Popup>:
+    title: "Inventory Initialization"
+    size_hint_x: 0.8
+    size_hint_y: None
+    height: self.width * 0.5
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: "Do you have this prime part?"
+            halign: 'center'
+        BoxLayout:
+            orientation: 'vertical'
+            Button:
+                text: "Yes"
+            Button:
+                text: "No"
+                on_release: root.dismiss()
+
+BoxLayout:
+    orientation: 'vertical'
+    Button:
+        text: "Open Popup"
+        on_release: Factory.InventoryInitPopup().open()
+    Button:
+        text: "Close App"
+        on_release: root.dismiss()
