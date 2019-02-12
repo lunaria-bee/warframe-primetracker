@@ -1,6 +1,5 @@
 from peewee import *
 from bs4 import BeautifulSoup, SoupStrainer
-from kivy.logger import Logger
 import certifi, urllib3
 
 DB_PATH = 'primedb.sqlite'
@@ -140,7 +139,7 @@ def close ():
 
 # Population Code #
 def populate (list_all=False):
-    Logger.info("Database: Population: Started")
+    print("info", "Database: Population: Started") # TODO convert to wx.Log
 
     http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
                                ca_certs=certifi.where())
@@ -166,7 +165,7 @@ def populate (list_all=False):
         rarity = rarity_records[contents[5].text.strip()]
         vaulted = contents[6].text.strip() == 'Yes'
 
-        Logger.debug("Database: Population: Processing {} in {} {}"
+        print("debug", "Database: Population: Processing {} in {} {}" # TODO convert to wx.Log
                      .format(full_name, relic_tier, relic_code))
 
         # Identify Product and Create if Needed #
@@ -212,20 +211,20 @@ def populate (list_all=False):
                 if relation and count:
                     relation[0].need_count=count
                     relation[0].save()
-                    Logger.debug("Database: {} needs {} {}"
+                    print("debug", "Database: {} needs {} {}" # TODO convert to wx.Log
                                  .format(product.name, count, part.name))
 
-    Logger.info("Database: Population: Completed")
+    print("info", "Database: Population: Completed") # TODO convert to wx.Log
 
 
 # Testing Code #
 def __test_population (log_level='DEBUG'):
-    Logger.setLevel(log_level)
+    print("setLevel", log_level) # TODO convert to wx.Log
     try:
         os.remove(DB_PATH)
-        Logger.info("Database: {} deleted".format(DB_PATH))
+        print("info", "Database: {} deleted".format(DB_PATH)) # TODO convert to wx.Log
     except Exception:
-        Logger.info("Database: {} not found".format(DB_PATH))
+        print("info", "Database: {} not found".format(DB_PATH)) # TODO convert to wx.Log
 
     open_()
     populate(True)
