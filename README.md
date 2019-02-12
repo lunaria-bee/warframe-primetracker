@@ -10,7 +10,6 @@ Python interpreter in interactive mode.
 - [peewee (>3.8.2)](http://docs.peewee-orm.com/en/latest/peewee/installation.html)
 - [BeautifulSoup4 (>4.7.1)](https://www.crummy.com/software/BeautifulSoup/#Download)
 - [certifi (>2018.11.29)](https://github.com/certifi/python-certifi)
-- [kivy (>1.10.1)](https://kivy.org/doc/stable/installation/installation.html)
 
 The versions listed after each dependency are what I used while devloping this
 tool. Newer versions will probably work, but older versions may not.
