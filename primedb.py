@@ -1,6 +1,7 @@
 from peewee import *
 from bs4 import BeautifulSoup, SoupStrainer
 import certifi, urllib3
+import wx
 
 DB_PATH = 'primedb.sqlite'
 WIKI_HOME = 'http://warframe.fandom.com'
@@ -139,12 +140,12 @@ def close ():
 
 # Population Code #
 def populate (list_all=False):
-    print("info", "Database: Population: Started") # TODO convert to wx.Log
+    wx.LogDebug("Database: Population: Started") # TODO convert to wx.Log
 
     http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
                                ca_certs=certifi.where())
     r = http.request('GET', WIKI_HOME + '/wiki/Void_Relic/ByRewards/SimpleTable')
-    tablerows = BeautifulSoup(r.data, 'lxml', parse_only=SoupStrainer('tr'))
+    tablerowx = BeautifulSoup(r.data, 'lxml', parse_only=SoupStrainer('tr'))
     tier_records={tier.name: tier for tier in
                   [RelicTier.get(ordinal=n) for n in range(4)]}
     rarity_records={rarity.name: rarity for rarity in
@@ -152,7 +153,7 @@ def populate (list_all=False):
     prime_type = ItemType.get(name='Prime')
 
     # Initial Population #
-    for row in tablerows.contents[2:]:
+    for row in tablerowx.contents[2:]:
         contents = row.contents
 
         # Parse Row #
@@ -165,7 +166,7 @@ def populate (list_all=False):
         rarity = rarity_records[contents[5].text.strip()]
         vaulted = contents[6].text.strip() == 'Yes'
 
-        print("debug", "Database: Population: Processing {} in {} {}" # TODO convert to wx.Log
+        wx.LogDebug("Database: Population: Processing {} in {} {}" # TODO convert to wx.Log
                      .format(full_name, relic_tier, relic_code))
 
         # Identify Product and Create if Needed #
@@ -211,20 +212,20 @@ def populate (list_all=False):
                 if relation and count:
                     relation[0].need_count=count
                     relation[0].save()
-                    print("debug", "Database: {} needs {} {}" # TODO convert to wx.Log
+                    wx.LogDebug("Database: {} needs {} {}" # TODO convert to wx.Log
                                  .format(product.name, count, part.name))
 
-    print("info", "Database: Population: Completed") # TODO convert to wx.Log
+    wx.LogDebug("Database: Population: Completed") # TODO convert to wx.Log
 
 
 # Testing Code #
 def __test_population (log_level='DEBUG'):
-    print("setLevel", log_level) # TODO convert to wx.Log
+    wx.LogDebug(log_level) # TODO convert to wx.Log
     try:
         os.remove(DB_PATH)
-        print("info", "Database: {} deleted".format(DB_PATH)) # TODO convert to wx.Log
+        wx.LogDebug("Database: {} deleted".format(DB_PATH)) # TODO convert to wx.Log
     except Exception:
-        print("info", "Database: {} not found".format(DB_PATH)) # TODO convert to wx.Log
+        wx.LogDebug("Database: {} not found".format(DB_PATH)) # TODO convert to wx.Log
 
     open_()
     populate(True)
