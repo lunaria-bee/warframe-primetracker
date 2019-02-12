@@ -140,7 +140,7 @@ def close ():
 
 # Population Code #
 def populate (list_all=False):
-    wx.LogDebug("Database: Population: Started") # TODO convert to wx.Log
+    wx.LogDebug("Database: Population: Started")
 
     http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
                                ca_certs=certifi.where())
@@ -166,7 +166,7 @@ def populate (list_all=False):
         rarity = rarity_records[contents[5].text.strip()]
         vaulted = contents[6].text.strip() == 'Yes'
 
-        wx.LogDebug("Database: Population: Processing {} in {} {}" # TODO convert to wx.Log
+        wx.LogDebug("Database: Population: Processing {} in {} {}"
                      .format(full_name, relic_tier, relic_code))
 
         # Identify Product and Create if Needed #
@@ -212,20 +212,20 @@ def populate (list_all=False):
                 if relation and count:
                     relation[0].need_count=count
                     relation[0].save()
-                    wx.LogDebug("Database: {} needs {} {}" # TODO convert to wx.Log
+                    wx.LogDebug("Database: {} needs {} {}"
                                  .format(product.name, count, part.name))
 
-    wx.LogDebug("Database: Population: Completed") # TODO convert to wx.Log
+    wx.LogDebug("Database: Population: Completed")
 
 
 # Testing Code #
 def __test_population (log_level='DEBUG'):
-    wx.LogDebug(log_level) # TODO convert to wx.Log
+    wx.LogDebug(log_level)
     try:
         os.remove(DB_PATH)
-        wx.LogDebug("Database: {} deleted".format(DB_PATH)) # TODO convert to wx.Log
+        wx.LogDebug("Database: {} deleted".format(DB_PATH))
     except Exception:
-        wx.LogDebug("Database: {} not found".format(DB_PATH)) # TODO convert to wx.Log
+        wx.LogDebug("Database: {} not found".format(DB_PATH))
 
     open_()
     populate(True)
