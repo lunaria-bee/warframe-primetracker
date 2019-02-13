@@ -1,5 +1,11 @@
 #:import Factory kivy.factory.Factory
 
+<DbPopulatePopup>:
+    on_open: self.execute()
+    bar: bar
+    ProgressBar:
+        id: bar
+
 <InventoryInitPopup>:
     title: "Inventory Initialization"
     size_hint_x: 0.8
@@ -33,8 +39,11 @@
 BoxLayout:
     orientation: 'vertical'
     Button:
-        text: "Open Popup"
+        text: "Populate Database"
+        on_release: Factory.DbPopulatePopup().open()
+    Button:
+        text: "Initialize Inventory"
         on_release: Factory.InventoryInitPopup().open()
     Button:
         text: "Close App"
-        on_release: root.dismiss()
+        on_release: app.stop()
