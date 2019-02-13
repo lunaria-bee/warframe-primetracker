@@ -139,64 +139,58 @@ def close ():
 
 
 # Population Code #
-def populate (list_all=False):
-    wx.LogDebug("Database: Population: Started")
-
-    http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
-                               ca_certs=certifi.where())
+def get_relic_drop_table (http):
+    
     r = http.request('GET', WIKI_HOME + '/wiki/Void_Relic/ByRewards/SimpleTable')
-    tablerowx = BeautifulSoup(r.data, 'lxml', parse_only=SoupStrainer('tr'))
-    tier_records={tier.name: tier for tier in
-                  [RelicTier.get(ordinal=n) for n in range(4)]}
-    rarity_records={rarity.name: rarity for rarity in
-                    [Rarity.get(ordinal=n) for n in range(3)]}
+    table = BeautifulSoup(r.data, 'lxml', parse_only=SoupStrainer('tr'))
+    return table.contents[2:]
+
+def process_relic_drop_table_row (row, http):
     prime_type = ItemType.get(name='Prime')
 
-    # Initial Population #
-    for row in tablerowx.contents[2:]:
-        contents = row.contents
+    contents = row.contents
 
-        # Parse Row #
-        product_name = contents[1].text.strip()
-        product_url = WIKI_HOME + contents[1].a['href']
-        part_name = contents[2].text.strip()       # e.g. "Chassis"
-        full_name = product_name + ' ' + part_name # e.g. "Volt Prime Chassis"
-        relic_tier = tier_records[contents[3].text.strip()]
-        relic_code = contents[4].text.strip()
-        rarity = rarity_records[contents[5].text.strip()]
-        vaulted = contents[6].text.strip() == 'Yes'
+    # Parse Row #
+    product_name = contents[1].text.strip()
+    product_url = WIKI_HOME + contents[1].a['href']
+    part_name = contents[2].text.strip()       # e.g. "Chassis"
+    full_name = product_name + ' ' + part_name # e.g. "Volt Prime Chassis"
+    relic_tier = RelicTier.get(name=contents[3].text.strip())
+    relic_code = contents[4].text.strip()
+    rarity = Rarity.get(name=contents[5].text.strip())
+    vaulted = contents[6].text.strip() == 'Yes'
 
-        wx.LogDebug("Database: Population: Processing {} in {} {}"
-                     .format(full_name, relic_tier, relic_code))
+    wx.LogDebug("Database: Population: Processing {} in {} {}"
+                .format(full_name, relic_tier, relic_code))
 
-        # Identify Product and Create if Needed #
-        product_selection = Item.select().where(Item.name == product_name)
-        if product_selection.count() == 0:
-            product = Item.create(name=product_name, type_=prime_type,
-                                  page=http.request('GET', product_url).data)
-        else:
-            product = product_selection[0]
+    # Identify Product and Create if Needed #
+    product_selection = Item.select().where(Item.name == product_name)
+    if product_selection.count() == 0:
+        product = Item.create(name=product_name, type_=prime_type,
+                              page=http.request('GET', product_url).data)
+    else:
+        product = product_selection[0]
 
-        # Identify Relic and Create if Needed #
-        relic_selection = Relic.select().where(Relic.tier == relic_tier)\
-                                        .where(Relic.code == relic_code)
-        if relic_selection.count() == 0:
-            relic = Relic.create(tier=relic_tier, code=relic_code, vaulted=vaulted)
-        else:
-            relic = relic_selection[0]
+    # Identify Relic and Create if Needed #
+    relic_selection = Relic.select().where(Relic.tier == relic_tier)\
+                                    .where(Relic.code == relic_code)
+    if relic_selection.count() == 0:
+        relic = Relic.create(tier=relic_tier, code=relic_code, vaulted=vaulted)
+    else:
+        relic = relic_selection[0]
 
-        # Identify Item and Create if Needed #
-        item_selection = Item.select().where(Item.name == full_name)
-        if item_selection.count() == 0:
-            item = Item.create(name=full_name, type_=prime_type)
-            BuildRequirement(needs=item, builds=product).save()
-        else:
-            item = item_selection[0]
+    # Identify Item and Create if Needed #
+    item_selection = Item.select().where(Item.name == full_name)
+    if item_selection.count() == 0:
+        item = Item.create(name=full_name, type_=prime_type)
+        BuildRequirement(needs=item, builds=product).save()
+    else:
+        item = item_selection[0]
 
-        # Create Relic Containment Relation #
-        Containment(contains=item, inside=relic, rarity=rarity).save()
+    # Create Relic Containment Relation #
+    Containment(contains=item, inside=relic, rarity=rarity).save()
 
-    # Calculate Required Part Quantities #
+def calculate_required_part_quantities ():
     for product in Item.select_all_products():
         foundry_table = product.soup.find('table', class_='foundrytable')
         for req in [r for r in foundry_table.contents[3].find_all('td') if r.a]:
@@ -215,7 +209,10 @@ def populate (list_all=False):
                     wx.LogDebug("Database: {} needs {} {}"
                                  .format(product.name, count, part.name))
 
-    wx.LogDebug("Database: Population: Completed")
+def populate (http):
+    table = get_relic_drop_table(http)
+    for row in table: process_relic_drop_table_row (row, http)
+    calculate_required_part_quantities()
 
 
 # Testing Code #
@@ -228,6 +225,7 @@ def __test_population (log_level='DEBUG'):
         wx.LogDebug("Database: {} not found".format(DB_PATH))
 
     open_()
-    populate(True)
+    populate(urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
+                                 ca_certs=certifi.where()))
     close()
     
