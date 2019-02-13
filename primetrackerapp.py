@@ -3,11 +3,26 @@
 import kivy, certifi, urllib3
 import primedb as db
 
+from threading import Thread
+
 from kivy.app import App
 from kivy.uix.popup import Popup
 
 class PrimeTrackerApp (App):
     pass
+
+class ProgressPopup (Popup):
+    class execution (Thread):
+        def __init__ (self, function, update_bar, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.function = function
+            self.update_bar = update_bar
+
+        def run (self):
+            self.function()
+
+    def update_bar (self, count=1):
+        self.bar.value += count
 
 class DbPopulatePopup (Popup):
     def execute (self):
