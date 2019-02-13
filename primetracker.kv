@@ -1,19 +1,31 @@
 #:import Factory kivy.factory.Factory
 
-<InventoryInitPopup@Popup>:
+<InventoryInitPopup>:
     title: "Inventory Initialization"
     size_hint_x: 0.8
     size_hint_y: None
-    height: self.width * 0.5
+    height: self.width * 0.3
+    on_open: self.parts_init()
+    prime_prompt: prime_prompt
     BoxLayout:
+        id: layout
         orientation: 'horizontal'
+        Image:
+            size_hint_x: None
+            width: self.height
         Label:
-            text: "Do you have this prime part?"
-            halign: 'center'
+            id: prime_prompt
+            halign: 'left'
+            valign: 'center'
+            padding: (15, 15)
+            text_size: self.size
         BoxLayout:
             orientation: 'vertical'
+            size_hint_x: None
+            width: self.height
             Button:
                 text: "Yes"
+                on_release: root.next_part()
             Button:
                 text: "No"
                 on_release: root.dismiss()
