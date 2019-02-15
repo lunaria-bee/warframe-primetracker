@@ -1,7 +1,7 @@
 from peewee import *
 from bs4 import BeautifulSoup, SoupStrainer
 import certifi, urllib3
-import wx
+from kivy.logger import Logger
 
 DB_PATH = 'primedb.sqlite'
 WIKI_HOME = 'http://warframe.fandom.com'
@@ -159,7 +159,7 @@ def process_relic_drop_table_row (row, http):
     rarity = Rarity.get(name=contents[5].text.strip())
     vaulted = contents[6].text.strip() == 'Yes'
 
-    wx.LogDebug("Database: Population: Processing {} in {} {}"
+    Logger.debug("Database: Population: Processing {} in {} {}"
                 .format(full_name, relic_tier, relic_code))
 
     # Identify Product and Create if Needed #
@@ -204,7 +204,7 @@ def calculate_product_requirement_quantities (product):
             if relation and count:
                 relation[0].need_count=count
                 relation[0].save()
-                wx.LogDebug("Database: {} needs {} {}"
+                Logger.debug("Database: {} needs {} {}"
                             .format(product.name, count, part.name))
 
 def calculate_required_part_quantities ():
@@ -224,7 +224,7 @@ def calculate_required_part_quantities ():
                 if relation and count:
                     relation[0].need_count=count
                     relation[0].save()
-                    wx.LogDebug("Database: {} needs {} {}"
+                    Logger.debug("Database: {} needs {} {}"
                                  .format(product.name, count, part.name))
 
 def populate (http):
@@ -235,12 +235,12 @@ def populate (http):
 
 # Testing Code #
 def __test_population (log_level='DEBUG'):
-    wx.LogDebug(log_level)
+    Logger.setLevel(log_level)
     try:
         os.remove(DB_PATH)
-        wx.LogDebug("Database: {} deleted".format(DB_PATH))
+        Logger.debug("Database: {} deleted".format(DB_PATH))
     except Exception:
-        wx.LogDebug("Database: {} not found".format(DB_PATH))
+        Logger.debug("Database: {} not found".format(DB_PATH))
 
     open_()
     populate(urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
