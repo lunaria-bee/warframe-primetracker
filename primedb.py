@@ -140,7 +140,6 @@ def close ():
 
 # Population Code #
 def get_relic_drop_table (http):
-    
     r = http.request('GET', WIKI_HOME + '/wiki/Void_Relic/ByRewards/SimpleTable')
     table = BeautifulSoup(r.data, 'lxml', parse_only=SoupStrainer('tr'))
     return table.contents[2:]
