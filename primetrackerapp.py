@@ -19,17 +19,20 @@ class DbPopulatePopup (Popup):
         self.table = db.get_relic_drop_table(self.http)
         self.bar.max = len(self.table)
         # self.updater = Clock.schedule_interval(partial(DbPopulatePopup.update, self), 0.5)
-        Thread(target=partial(DbPopulatePopup.populate, self)).start()
+        self.execution = Thread(target=partial(DbPopulatePopup.populate, self)).start()
 
     def populate (self):
         for row in self.table:
             db.process_relic_drop_table_row(row, self.http)
-            Clock.schedule_once(lambda _: self.update())
+            Clock.schedule_once(lambda _: self.update("Processing Relic drops"))
+        Clock.schedule_once(lambda _: self.update("Processing build requirements"))
         db.calculate_required_part_quantities()
         self.dismiss()
 
-    def update (self):
+    def update (self, description):
         self.bar.value += 1
+        self.description.text = ("{} ({:.0f}/{:.0f})..."
+                                 .format(description, self.bar.value, self.bar.max))
 
 class InventoryInitPopup (Popup):
     def parts_init (self):

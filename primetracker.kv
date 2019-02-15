@@ -7,14 +7,26 @@
 #         id: bar
 
 <DbPopulatePopup>:
-    bar: bar
+    title: "Populating Database"
     on_open: self.start()
-    BoxLayout:
+    size_hint_x: 0.8
+    size_hint_y: None
+    height: self.width * 0.2
+    bar: bar
+    description: description
+    FloatLayout:
+        orientation: 'vertical'
         ProgressBar:
             id: bar
+            pos_hint: {'center_x': 0.5, 'center_y': 0.55}
+            size_hint: 0.9, 1
+        Label:
+            id: description
+            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+            valign: 'center'
 
 <InventoryInitPopup>:
-    title: "Inventory Initialization"
+    title: "Initializing Inventory"
     size_hint_x: 0.8
     size_hint_y: None
     height: self.width * 0.3
