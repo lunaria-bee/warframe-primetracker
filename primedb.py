@@ -72,7 +72,7 @@ class Relic (DataModel):
     vaulted = BooleanField(default=False)
 
     class Meta:
-        indexes = ( (('tier', 'code'), True), )
+        indexes = ( (('tier', 'code'), True), ) # should be "indices," bad peewee =/
 
     @property
     def name (self):
