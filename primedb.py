@@ -1,7 +1,7 @@
 from peewee import *
 from bs4 import BeautifulSoup, SoupStrainer
 import certifi, urllib3
-import wx
+from kivy.logger import Logger
 
 DB_PATH = 'primedb.sqlite'
 WIKI_HOME = 'http://warframe.fandom.com'
@@ -72,7 +72,7 @@ class Relic (DataModel):
     vaulted = BooleanField(default=False)
 
     class Meta:
-        indexes = ( (('tier', 'code'), True), )
+        indexes = ( (('tier', 'code'), True), ) # should be "indices," bad peewee =/
 
     @property
     def name (self):
@@ -140,7 +140,6 @@ def close ():
 
 # Population Code #
 def get_relic_drop_table (http):
-    
     r = http.request('GET', WIKI_HOME + '/wiki/Void_Relic/ByRewards/SimpleTable')
     table = BeautifulSoup(r.data, 'lxml', parse_only=SoupStrainer('tr'))
     return table.contents[2:]
@@ -160,7 +159,7 @@ def process_relic_drop_table_row (row, http):
     rarity = Rarity.get(name=contents[5].text.strip())
     vaulted = contents[6].text.strip() == 'Yes'
 
-    wx.LogDebug("Database: Population: Processing {} in {} {}"
+    Logger.debug("Database: Population: Processing {} in {} {}"
                 .format(full_name, relic_tier, relic_code))
 
     # Identify Product and Create if Needed #
@@ -190,7 +189,26 @@ def process_relic_drop_table_row (row, http):
     # Create Relic Containment Relation #
     Containment(contains=item, inside=relic, rarity=rarity).save()
 
+def calculate_product_requirement_quantities (product):
+    foundry_table = product.soup.find('table', class_='foundrytable')
+    for req in [r for r in foundry_table.contents[3].find_all('td') if r.a]:
+        count = req.text.strip()
+        part_name = req.a['title'].strip()
+        part_query = Item.select().where(Item.name.contains(product.name)
+                                         & Item.name.contains(part_name))
+        if part_query:
+            part = part_query[0]
+            relation = (BuildRequirement.select()
+                        .where((BuildRequirement.builds==product)
+                               & (BuildRequirement.needs==part)))
+            if relation and count:
+                relation[0].need_count=count
+                relation[0].save()
+                Logger.debug("Database: {} needs {} {}"
+                            .format(product.name, count, part.name))
+
 def calculate_required_part_quantities ():
+    '''DEPRECATED'''
     for product in Item.select_all_products():
         foundry_table = product.soup.find('table', class_='foundrytable')
         for req in [r for r in foundry_table.contents[3].find_all('td') if r.a]:
@@ -206,23 +224,23 @@ def calculate_required_part_quantities ():
                 if relation and count:
                     relation[0].need_count=count
                     relation[0].save()
-                    wx.LogDebug("Database: {} needs {} {}"
+                    Logger.debug("Database: {} needs {} {}"
                                  .format(product.name, count, part.name))
 
 def populate (http):
     table = get_relic_drop_table(http)
     for row in table: process_relic_drop_table_row (row, http)
-    calculate_required_part_quantities()
+    for product in Item.select_all_products(): calculate_product_requirement_quantities(product)
 
 
 # Testing Code #
 def __test_population (log_level='DEBUG'):
-    wx.LogDebug(log_level)
+    Logger.setLevel(log_level)
     try:
         os.remove(DB_PATH)
-        wx.LogDebug("Database: {} deleted".format(DB_PATH))
+        Logger.debug("Database: {} deleted".format(DB_PATH))
     except Exception:
-        wx.LogDebug("Database: {} not found".format(DB_PATH))
+        Logger.debug("Database: {} not found".format(DB_PATH))
 
     open_()
     populate(urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
