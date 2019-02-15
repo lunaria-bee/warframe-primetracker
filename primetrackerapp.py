@@ -25,8 +25,9 @@ class DbPopulatePopup (Popup):
         for row in self.table:
             db.process_relic_drop_table_row(row, self.http)
             Clock.schedule_once(lambda _: self.update("Processing Relic drops"))
-        Clock.schedule_once(lambda _: self.update("Processing build requirements"))
-        db.calculate_required_part_quantities()
+        for product in db.Item.select_all_products():
+            db.calculate_product_requirement_quantities(product)
+            Clock.schedule_once(lambda _: self.update("Processing build requirements"))
         self.dismiss()
 
     def update (self, description):
