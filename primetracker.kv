@@ -6,7 +6,16 @@
 #     ProgressBar:
 #         id: bar
 
-# TODO set max and min height for popups    
+# TODO set max and min height for popups
+
+<ProgressPopup>:
+    bar: bar
+    description: description
+    FloatLayout:
+        ProgressBar:
+            id: bar
+        Label:
+            id: description
 
 <DbPopulatePopup>:
     title: "Populating Database"

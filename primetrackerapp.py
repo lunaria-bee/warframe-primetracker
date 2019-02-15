@@ -13,6 +13,35 @@ from kivy.uix.popup import Popup
 class PrimeTrackerApp (App):
     pass
 
+class ProgressPopup (Popup):
+    def __init__ (self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.current_phase_max = 0
+        self.cumulative_max = 0
+        self.current_phase_value = 0
+        self.description_message = self.description.text
+
+    def new_phase (self, phase_max, phase_percent, message=None):
+        percent = self.bar.value_normalized
+        self.bar.max = int((self.cumulative_max + phase_max) / (percent + phase_percent))
+        self.bar.value = int(self.bar.max * percent)
+        self.current_phase_max = phase_max
+        self.cumulative_max += phase_max
+        self.current_phase_value = 0
+        self.update_description(message)
+
+    def update_bar (self, steps=1, message=None):
+        self.bar.value += steps
+        self.current_phase_value += steps
+        self.update_description(description)
+
+    def update_description(self, message=None):
+        if not message is None: self.description_message = message
+        self.description.text = ("{} {(:.0f}/{:.0f})..."
+                                 .format(self.description_message,
+                                         self.current_phase_value,
+                                         self.current_phase_max))
+
 class DbPopulatePopup (Popup):
     def start (self):
         self.http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
