@@ -230,7 +230,7 @@ def calculate_required_part_quantities ():
 def populate (http):
     table = get_relic_drop_table(http)
     for row in table: process_relic_drop_table_row (row, http)
-    calculate_required_part_quantities()
+    for product in Item.select_all_products(): calculate_product_requirement_quantities(product)
 
 
 # Testing Code #
