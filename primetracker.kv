@@ -1,15 +1,17 @@
 #:import Factory kivy.factory.Factory
 
-<ProgressPopup>:
-    bar: bar
-    ProgressBar:
-        id: bar
+# <ProgressPopup>:
+#     bar: bar
+#     on_open: self.start()
+#     ProgressBar:
+#         id: bar
 
 <DbPopulatePopup>:
-    on_open: self.execute()
     bar: bar
-    ProgressBar:
-        id: bar
+    on_open: self.start()
+    BoxLayout:
+        ProgressBar:
+            id: bar
 
 <InventoryInitPopup>:
     title: "Inventory Initialization"
