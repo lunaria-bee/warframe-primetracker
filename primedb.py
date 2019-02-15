@@ -189,7 +189,26 @@ def process_relic_drop_table_row (row, http):
     # Create Relic Containment Relation #
     Containment(contains=item, inside=relic, rarity=rarity).save()
 
+def calculate_product_requirement_quantities (product):
+    foundry_table = product.soup.find('table', class_='foundrytable')
+    for req in [r for r in foundry_table.contents[3].find_all('td') if r.a]:
+        count = req.text.strip()
+        part_name = req.a['title'].strip()
+        part_query = Item.select().where(Item.name.contains(product.name)
+                                         & Item.name.contains(part_name))
+        if part_query:
+            part = part_query[0]
+            relation = (BuildRequirement.select()
+                        .where((BuildRequirement.builds==product)
+                               & (BuildRequirement.needs==part)))
+            if relation and count:
+                relation[0].need_count=count
+                relation[0].save()
+                wx.LogDebug("Database: {} needs {} {}"
+                            .format(product.name, count, part.name))
+
 def calculate_required_part_quantities ():
+    '''DEPRECATED'''
     for product in Item.select_all_products():
         foundry_table = product.soup.find('table', class_='foundrytable')
         for req in [r for r in foundry_table.contents[3].find_all('td') if r.a]:
