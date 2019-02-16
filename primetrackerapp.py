@@ -14,6 +14,23 @@ from kivy.logger import Logger
 class PrimeTrackerApp (App):
     pass
 
+class ProgressLabel (Label):
+    # TODO
+    def __init__ (self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.max = 100
+        self.value = 0
+        self.prefix = ""
+        self.postfix = ""
+        # self.show_percent = False # TODO
+
+    def update (self, steps=1, prefix=None, postfix=None):
+        if not prefix is None: self.prefix = prefix
+        if not postfix is None: self.postfix = postfix
+        self.text = "{} ({}/{}) {}".format(self.prefix,
+                                           self.value, self.max,
+                                           self.postfix))
+
 class ProgressPopup (Popup):
     # TODO update to display phase info
 
