@@ -10,12 +10,22 @@
 
 <ProgressPopup>:
     bar: bar
-    description: description
+    phase_info: phase_info
+    step_info: step_info
     FloatLayout:
+        Label:
+            id: phase_info
+            pos_hint: {'center_x': 0.5, 'center_y': 0.75}
+            valign: 'center'
+            text: "TEST"
         ProgressBar:
             id: bar
+            pos_hint: {'center_x': 0.5, 'center_y': .5}
+            size_hint: 0.9, 1
         Label:
-            id: description
+            id: step_info
+            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+            valign: 'center'
 
 <DbPopulatePopup>:
     title: "Populating Database"
@@ -23,18 +33,6 @@
     size_hint_x: 0.8
     size_hint_y: None
     height: 200
-    bar: bar
-    description: description
-    FloatLayout:
-        orientation: 'vertical'
-        ProgressBar:
-            id: bar
-            pos_hint: {'center_x': 0.5, 'center_y': 0.55}
-            size_hint: 0.9, 1
-        Label:
-            id: description
-            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
-            valign: 'center'
 
 <InventoryInitPopup>:
     title: "Initializing Inventory"
