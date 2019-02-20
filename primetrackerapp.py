@@ -15,6 +15,11 @@ from kivy.logger import Logger
 class PrimeTrackerApp (App):
     pass
 
+class PhasedProgressBar (ProgressBar):
+    # TOOD
+    phase_percents = ListProperty()
+    phase_maxes = ListProperty()
+
 class ProgressLabel (Label):
     # TODO
     def __init__ (self, *args, **kwargs):
