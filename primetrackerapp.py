@@ -6,6 +6,7 @@ import primedb as db
 from threading import Thread
 from functools import partial
 
+from kivy.properties import *
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
@@ -25,24 +26,23 @@ class ProgressLabel (Label):
         # self.show_percent = False # TODO
 
     def update (self, steps=1, prefix=None, postfix=None):
-        if not prefix is None: self.prefix = prefix
-        if not postfix is None: self.postfix = postfix
-        self.text = "{} ({}/{}) {}".format(self.prefix,
+        if not prefix is None: self.prefix = prefix + " "
+        if not postfix is None: self.postfix = " " + postfix
+        self.text = "{}({}/{}){}".format(self.prefix,
                                            self.value, self.max,
                                            self.postfix))
 
 class ProgressPopup (Popup):
     # TODO update to display phase info
+    current_phase_max = NumericProperty(0)
+    current_phase_percent = NumericProperty(0)
+    current_phase_max = NumericProperty(0)
+    _cumulative_max = NumericProperty(0)
 
     def __init__ (self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.current_phase_max = 0
-        self.current_phase_percent = 0
-        self.cumulative_max = 0
-        self.current_phase_value = 0
-        self.description_message = self.step_info.text
 
-    def new_phase (self, phase_max, phase_percent, message=None):
+    def new_phase (self, phase_max, phase_percent, prefix=None, postfix=None):
         percent = self.bar.value_normalized
         self.bar.max = int((self.cumulative_max + phase_max) / (percent + phase_percent))
         self.bar.value = int(self.bar.max * percent)
@@ -52,24 +52,10 @@ class ProgressPopup (Popup):
         self.current_phase_value = 0
         # TODO update phase info
 
-    def update_bar (self, steps=1, message=None):
+    def step (self, steps=1):
         self.bar.value += (steps / self.current_phase_max) * self.current_phase_percent * self.bar.max
         self.current_phase_value += steps
         # TODO update step info
-
-    def update_phase_info (self, message=None):
-        pass
-
-    def update_step_info (self, message=None):
-        pass
-
-    def update_description(self, message=None):
-        if not message is None: self.description_message = message
-        self.step_info.text = ("{} ({:.0f}/{:.0f}, {:.0%})..."
-                               .format(self.description_message,
-                                       self.current_phase_value,
-                                       self.current_phase_max,
-                                       self.current_phase_value / self.current_phase_max))
 
 class DbPopulatePopup (ProgressPopup):
     def start (self):
@@ -81,13 +67,13 @@ class DbPopulatePopup (ProgressPopup):
         Clock.schedule_once(lambda _: self.new_phase(len(table), .9, "Processing Relic drops"))
         for row in table:
             db.process_relic_drop_table_row(row, http)
-            Clock.schedule_once(lambda _: self.update_bar())
+            Clock.schedule_once(lambda _: self.step())
 
         products = db.Item.select_all_products()
         Clock.schedule_once(lambda _: self.new_phase(len(products), .1,  "Processing build requirements"))
         for product in db.Item.select_all_products():
             db.calculate_product_requirement_quantities(product)
-            Clock.schedule_once(lambda _: self.update_bar())
+            Clock.schedule_once(lambda _: self.step())
         self.dismiss()
 
 class InventoryInitPopup (Popup):
