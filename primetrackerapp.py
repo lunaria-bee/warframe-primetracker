@@ -41,7 +41,7 @@ class ProgressPopup (Popup):
     # TODO update to display phase info
     current_phase_max = NumericProperty(0)
     current_phase_percent = NumericProperty(0)
-    current_phase_max = NumericProperty(0)
+    current_phase_value = NumericProperty(0)
     _cumulative_max = NumericProperty(0)
 
     def __init__ (self, *args, **kwargs):
