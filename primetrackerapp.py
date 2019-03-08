@@ -35,8 +35,8 @@ class ProgressLabel (Label):
         if not prefix is None: self.prefix = prefix + " "
         if not postfix is None: self.postfix = " " + postfix
         self.text = "{}({}/{}){}".format(self.prefix,
-                                           self.value, self.max,
-                                           self.postfix))
+                                         self.value, self.max,
+                                         self.postfix)
 
 class ProgressPopup (Popup):
     # TODO update to display phase info
