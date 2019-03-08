@@ -21,11 +21,19 @@ class PrimeTrackerApp (App):
 
 class AutoHighlightingTextInput (TextInput):
     def __init__ (self, *args, **kwargs):
+        self.register_event_type('on_text')
         super().__init__(*args, **kwargs)
         self.bind(focus=self.on_focus)
+        self.bind(text=self.text_dispatch)
+
+    def text_dispatch (self, *args):
+        self.dispatch('on_text', self.text)
 
     def on_focus (self, instance, value):
         if value: Clock.schedule_once(lambda _: self.select_all())
+
+    def on_text (self, *args):
+        pass
 
 class SpinCounter (BoxLayout):
     default = NumericProperty(0)
@@ -147,7 +155,6 @@ class InventoryInitPopup (Popup):
         if self.spin_counter.check_input():
             self.next_part()
             self.spin_counter.reset()
-            self.spin_counter.text.select_all()
         self.spin_counter.focus = True
 
     def next_part (self):
