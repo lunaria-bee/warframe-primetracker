@@ -12,22 +12,26 @@
     orientation: 'horizontal'
     size: 64, 32
     text: text
-    TextInput:
+    AutoHighlightingTextInput:
         id: text
         multiline: False
+        focus: True
         size_hint_x: 0.6
         font_size: self.height * 0.8
         text: '0'
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        input_filter: 'int'
     BoxLayout:
         orientation: 'vertical'
         size_hint_x: 0.4
         Button:
             text: '+'
-            on_press: root.increment()
+            on_press: root.adjust(1)
+            on_release: root.text.focus = True
         Button:
             text: '-'
-            on_press: root.decrement()
+            on_press: root.adjust(-1)
+            on_release: root.text.focus = True
 
 <ProgressPopup>:
     bar: bar

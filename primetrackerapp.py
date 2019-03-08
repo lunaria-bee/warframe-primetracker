@@ -13,17 +13,60 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 from kivy.logger import Logger
 
 class PrimeTrackerApp (App):
     pass
 
-class SpinCounter (BoxLayout):
-    def increment (self):
-        self.text.text = str(int(self.text.text) + 1)
+class AutoHighlightingTextInput (TextInput):
+    def __init__ (self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.bind(focus=self.on_focus)
 
-    def decrement (self):
-        self.text.text = str(int(self.text.text) - 1)
+    def on_focus (self, instance, value):
+        if value: Clock.schedule_once(lambda _: self.select_all())
+
+class SpinCounter (BoxLayout):
+    default = NumericProperty(0)
+    value = BoundedNumericProperty(0, min=None, max=None)
+
+    def __init__ (self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.reset()
+
+    def set_max (self, max_):
+        self.property('value').set_max(self, max_)
+
+    def set_min (self, min_):
+        self.property('value').set_min(self, min_)
+
+    def reset (self):
+        self.value = self.default
+
+    def adjust (self, change):
+        try:
+            self.value += change
+        except ValueError:
+            pass
+
+    def check_input (self):
+        try:
+            self.value = int(self.text.text)
+            return True
+        except ValueError:
+            min_ = self.property('value').get_min(self)
+            max_ = self.property('value').get_max(self)
+            if not min_ is None and max_ is None:
+                Logger.error("GUI: Value must be greater than {}".format(min_))
+            elif min_ is None and not max_ is None:
+                Logger.error("GUI: Value must be less than {}".format(max_))
+            else:
+                Logger.error("GUI: Value must be between {} and {}".format(max_, min_))
+            return False
+
+    def on_value (self, instance, value):
+        self.text.text = str(self.value)
 
 # TODO finished phased progress bars
 class PhasedProgressBar (ProgressBar):
@@ -94,13 +137,22 @@ class DbPopulatePopup (ProgressPopup):
 
 class InventoryInitPopup (Popup):
     def parts_init (self):
-        self.spin_counter
+        self.spin_counter.text.text_validate_unfocus = False
+        self.spin_counter.text.bind(on_text_validate=self.process_next)
+        self.spin_counter.set_min(0)
         self.parts = db.Item.select_all_products() + db.Item.select_all_components()
         self.next_part()
 
+    def process_next(self, instance):
+        if self.spin_counter.check_input():
+            self.next_part()
+            self.spin_counter.reset()
+            self.spin_counter.text.select_all()
+        self.spin_counter.focus = True
+
     def next_part (self):
         self.current_part = self.parts.pop(0)
-        self.prime_prompt.text = "Do you have {}?".format(self.current_part.name)
+        self.prime_prompt.text = "Enter number of {} in inventory:".format(self.current_part.name)
 
 def main ():
     PrimeTrackerApp().run()
