@@ -8,6 +8,27 @@
 
 # TODO set max and min height for popups
 
+<SpinCounter>:
+    orientation: 'horizontal'
+    size: 64, 32
+    text: text
+    TextInput:
+        id: text
+        multiline: False
+        size_hint_x: 0.6
+        font_size: self.height * 0.8
+        text: '0'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_x: 0.4
+        Button:
+            text: '+'
+            on_press: root.increment()
+        Button:
+            text: '-'
+            on_press: root.decrement()
+
 <ProgressPopup>:
     bar: bar
     phase_info: phase_info
@@ -41,28 +62,23 @@
     height: self.width * 0.3
     on_open: self.parts_init()
     prime_prompt: prime_prompt
+    spin_counter: spin_counter
     BoxLayout:
         id: layout
         orientation: 'horizontal'
-        Image:
-            size_hint_x: None
-            width: self.height
+        # Image:
+        #     size_hint_x: None
+        #     width: self.height
         Label:
             id: prime_prompt
             halign: 'left'
             valign: 'center'
             padding: (15, 15)
             text_size: self.size
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint_x: None
-            width: self.height
-            Button:
-                text: "Yes"
-                on_release: root.next_part()
-            Button:
-                text: "No"
-                on_release: root.dismiss()
+        FloatLayout:
+            SpinCounter:
+                id: spin_counter
+                pos_hint: {'right': 1, 'center_y': 0.5}
 
 BoxLayout:
     orientation: 'vertical'

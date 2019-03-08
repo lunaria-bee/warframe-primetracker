@@ -94,7 +94,7 @@ class DbPopulatePopup (ProgressPopup):
 
 class InventoryInitPopup (Popup):
     def parts_init (self):
-        self.spin_counter
+        self.spin_counter.
         self.parts = db.Item.select_all_products() + db.Item.select_all_components()
         self.next_part()
 
