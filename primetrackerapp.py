@@ -10,6 +10,8 @@ from kivy.properties import *
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
+from kivy.uix.progressbar import ProgressBar
+from kivy.uix.label import Label
 from kivy.logger import Logger
 
 class PrimeTrackerApp (App):
