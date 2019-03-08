@@ -19,7 +19,7 @@ from kivy.logger import Logger
 class PrimeTrackerApp (App):
     pass
 
-class AutoHighlightingTextInput (TextInput):
+class DynamicTextInput (TextInput):
     def __init__ (self, *args, **kwargs):
         self.register_event_type('on_text')
         super().__init__(*args, **kwargs)
