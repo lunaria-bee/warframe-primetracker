@@ -15,6 +15,7 @@ from kivy.logger import Logger
 class PrimeTrackerApp (App):
     pass
 
+# TODO finished phased progress bars
 class PhasedProgressBar (ProgressBar):
     # TOOD
     phase_percents = ListProperty()
