@@ -20,17 +20,24 @@ class PrimeTrackerApp (App):
     pass
 
 class DynamicTextInput (TextInput):
+    autohighlight = BooleanProperty(True)
+
     def __init__ (self, *args, **kwargs):
         self.register_event_type('on_text')
+        self.register_event_type('on_focus')
         super().__init__(*args, **kwargs)
-        self.bind(focus=self.on_focus)
+        self.bind(focus=self.focus_dispatch)
         self.bind(text=self.text_dispatch)
 
-    def text_dispatch (self, *args):
-        self.dispatch('on_text', self.text)
+    def focus_dispatch (self, *args):
+        self.dispatch('on_focus', self, self.focus)
 
     def on_focus (self, instance, value):
-        if value: Clock.schedule_once(lambda _: self.select_all())
+        if value and self.autohighlight:
+            Clock.schedule_once(lambda _: self.select_all())
+
+    def text_dispatch (self, *args):
+        self.dispatch('on_text', self, self.text)
 
     def on_text (self, *args):
         pass
