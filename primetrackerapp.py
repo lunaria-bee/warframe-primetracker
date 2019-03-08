@@ -67,7 +67,7 @@ class SpinCounter (BoxLayout):
 
     def check_input (self):
         try:
-            self.value = int(self.text.text)
+            self.value = int(self.text_input.text)
             return True
         except ValueError:
             min_ = self.property('value').get_min(self)
@@ -81,7 +81,7 @@ class SpinCounter (BoxLayout):
             return False
 
     def on_value (self, instance, value):
-        self.text.text = str(self.value)
+        self.text_input.text = str(self.value)
 
 # TODO finished phased progress bars
 class PhasedProgressBar (ProgressBar):
@@ -152,8 +152,8 @@ class DbPopulatePopup (ProgressPopup):
 
 class InventoryInitPopup (Popup):
     def parts_init (self):
-        self.spin_counter.text.text_validate_unfocus = False
-        self.spin_counter.text.bind(on_text_validate=self.process_next)
+        self.spin_counter.text_input.text_validate_unfocus = False
+        self.spin_counter.text_input.bind(on_text_validate=self.process_next)
         self.spin_counter.set_min(0)
         self.parts = db.Item.select_all_products() + db.Item.select_all_components()
         self.next_part()

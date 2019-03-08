@@ -11,9 +11,9 @@
 <SpinCounter>:
     orientation: 'horizontal'
     size: 64, 32
-    text: text
+    text_input: text_input
     DynamicTextInput:
-        id: text
+        id: text_input
         multiline: False
         focus: True
         size_hint_x: 0.6
@@ -28,11 +28,11 @@
         Button:
             text: '+'
             on_press: root.adjust(1)
-            on_release: root.text.focus = True
+            on_release: root.text_input.focus = True
         Button:
             text: '-'
             on_press: root.adjust(-1)
-            on_release: root.text.focus = True
+            on_release: root.text_input.focus = True
 
 <ProgressPopup>:
     bar: bar
