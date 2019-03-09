@@ -28,6 +28,7 @@ class ItemType (DataModel):
 class Item (DataModel):
     type_ = ForeignKeyField(ItemType, backref='items')
     page = TextField(null = True)
+    owned = IntegerField(default=0)
     # ducats = IntegerField(default=0)
 
     @staticmethod
