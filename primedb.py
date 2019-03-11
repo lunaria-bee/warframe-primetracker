@@ -243,12 +243,12 @@ def __test_population (log_level='DEBUG'):
     except Exception:
         Logger.debug("Database: {} not found".format(DB_PATH))
 
-    open_()
     try:
+        open_()
         populate(urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
                                      ca_certs=certifi.where()))
-    except:
-        pass
-    finally:
         os.remove(DB_PATH + ".bkp")
-    close()
+    except Exception as e:
+        print(e)
+    finally:
+        close()
