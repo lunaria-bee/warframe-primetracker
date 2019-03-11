@@ -92,8 +92,8 @@ class Relic (DataModel):
 
 # Relation Tables #
 class BuildRequirement (RelationModel):
-    needs = ForeignKeyField(Item, backref='requirements')
-    builds = ForeignKeyField(Item, backref='requirements')
+    needs = ForeignKeyField(Item, backref='product_reqs')
+    builds = ForeignKeyField(Item, backref='component_reqs')
     need_count = IntegerField(default=1)
     build_count = IntegerField(default=1)
     class Meta:
