@@ -51,11 +51,11 @@ class Item (DataModel):
 
     @property
     def builds (self):
-        return tuple(set(r.builds for r in self.requirements if r != self))
+        return tuple(r.builds for r in self.product_links)
 
     @property
     def needs (self):
-        return tuple(set(r.needs for r in self.requirements if r != self))
+        return tuple(r.needs for r in self.component_links)
 
     @property
     def vaulted (self):
@@ -92,8 +92,8 @@ class Relic (DataModel):
 
 # Relation Tables #
 class BuildRequirement (RelationModel):
-    needs = ForeignKeyField(Item, backref='product_reqs')
-    builds = ForeignKeyField(Item, backref='component_reqs')
+    needs = ForeignKeyField(Item, backref='product_links')
+    builds = ForeignKeyField(Item, backref='component_links')
     need_count = IntegerField(default=1)
     build_count = IntegerField(default=1)
     class Meta:
