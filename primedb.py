@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup, SoupStrainer
 import certifi, urllib3
 from kivy.logger import Logger
 
+# TODO rework population functions to work with existing database
+
 DB_PATH = 'primedb.sqlite'
 WIKI_HOME = 'http://warframe.fandom.com'
 
