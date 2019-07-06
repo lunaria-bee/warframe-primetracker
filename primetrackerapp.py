@@ -84,7 +84,52 @@ class SpinCounter (BoxLayout):
         self.text_input.text = str(self.value)
 
 # TODO finished phased progress bars
+# class PhasedProgressBar (ProgressBar):
+#     # TODO
+#     phase_percents = ListProperty()
+#     phase_maxes = ListProperty()
 
+# class ProgressLabel (Label):
+#     # TODO
+#     def __init__ (self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.max = 100
+#         self.value = 0
+#         self.prefix = ""
+#         self.postfix = ""
+#         # self.show_percent = False # TODO
+
+#     def update (self, steps=1, prefix=None, postfix=None):
+#         if not prefix is None: self.prefix = prefix + " "
+#         if not postfix is None: self.postfix = " " + postfix
+#         self.text = "{}({}/{}){}".format(self.prefix,
+#                                          self.value, self.max,
+#                                          self.postfix)
+
+# class ProgressPopup (Popup):
+#     # TODO update to display phase info
+#     current_phase_max = NumericProperty(0)
+#     current_phase_percent = NumericProperty(0)
+#     current_phase_value = NumericProperty(0)
+#     _cumulative_max = NumericProperty(0)
+
+#     def __init__ (self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+
+#     def new_phase (self, phase_max, phase_percent, prefix=None, postfix=None):
+#         percent = self.bar.value_normalized
+#         self.bar.max = int((self.cumulative_max + phase_max) / (percent + phase_percent))
+#         self.bar.value = int(self.bar.max * percent)
+#         self.current_phase_max = phase_max
+#         self.current_phase_percent = phase_percent
+#         self.cumulative_max += phase_max
+#         self.current_phase_value = 0
+#         # TODO update phase info
+
+#     def step (self, steps=1):
+#         self.bar.value += (steps / self.current_phase_max) * self.current_phase_percent * self.bar.max
+#         self.current_phase_value += steps
+#         # TODO update step info
 
 class DbPopulatePopup (ProgressPopup):
     def start (self):
