@@ -34,24 +34,24 @@
             on_press: root.adjust(-1)
             on_release: root.text_input.focus = True
 
-# <ProgressPopup>:
-#     bar: bar
-#     phase_info: phase_info
-#     step_info: step_info
-#     FloatLayout:
-#         ProgressLabel:
-#             id: phase_info
-#             pos_hint: {'center_x': 0.5, 'center_y': 0.75}
-#             valign: 'center'
-#             text: "TEST"
-#         ProgressBar:
-#             id: bar
-#             pos_hint: {'center_x': 0.5, 'center_y': .5}
-#             size_hint: 0.9, 1
-#         ProgressLabel:
-#             id: step_info
-#             pos_hint: {'center_x': 0.5, 'center_y': 0.25}
-#             valign: 'center'
+<ProgressPopup>:
+    bar: bar
+    phase_info: phase_info
+    step_info: step_info
+    FloatLayout:
+        ProgressLabel:
+            id: phase_info
+            pos_hint: {'center_x': 0.5, 'center_y': 0.75}
+            valign: 'center'
+            text: "TEST"
+        ProgressBar:
+            id: bar
+            pos_hint: {'center_x': 0.5, 'center_y': .5}
+            size_hint: 0.9, 1
+        ProgressLabel:
+            id: step_info
+            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+            valign: 'center'
 
 <DbPopulatePopup>:
     title: "Populating Database"
