@@ -84,30 +84,31 @@ class SpinCounter (BoxLayout):
         self.text_input.text = str(self.value)
 
 # TODO finished phased progress bars
-# class ProgressPopup (Popup):
-#     # TODO update to display phase info
-#     current_phase_max = NumericProperty(0)
-#     current_phase_percent = NumericProperty(0)
-#     current_phase_value = NumericProperty(0)
-#     _cumulative_max = NumericProperty(0)
+class ProgressPopup (Popup):
+    # TODO update to display phase info
+    phase_count = NumericProperty()
+    current_phase = BoundedNumericProperty()
 
-#     def __init__ (self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
+    def __init__ (self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.property('current_phase').set_max(self.phase_count)
 
-#     def new_phase (self, phase_max, phase_percent, prefix=None, postfix=None):
-#         percent = self.bar.value_normalized
-#         self.bar.max = int((self.cumulative_max + phase_max) / (percent + phase_percent))
-#         self.bar.value = int(self.bar.max * percent)
-#         self.current_phase_max = phase_max
-#         self.current_phase_percent = phase_percent
-#         self.cumulative_max += phase_max
-#         self.current_phase_value = 0
-#         # TODO update phase info
+    def new_phase (self, phase_max, phase_percent, prefix=None, postfix=None):
+        # TODO simplify
+        percent = self.bar.value_normalized
+        self.bar.max = int((self.cumulative_max + phase_max) / (percent + phase_percent))
+        self.bar.value = int(self.bar.max * percent)
+        self.current_phase_max = phase_max
+        self.current_phase_percent = phase_percent
+        self.cumulative_max += phase_max
+        self.current_phase_value = 0
+        # TODO update phase info
 
-#     def step (self, steps=1):
-#         self.bar.value += (steps / self.current_phase_max) * self.current_phase_percent * self.bar.max
-#         self.current_phase_value += steps
-#         # TODO update step info
+    def step (self, steps=1):
+        # TODO simplify
+        self.bar.value += (steps / self.current_phase_max) * self.current_phase_percent * self.bar.max
+        self.current_phase_value += steps
+        # TODO update step info
 
 class DbPopulatePopup (ProgressPopup):
     def start (self):
