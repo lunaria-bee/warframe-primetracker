@@ -93,16 +93,11 @@ class ProgressPopup (Popup):
         super().__init__(*args, **kwargs)
         self.property('current_phase').set_max(self.phase_count)
 
-    def new_phase (self, phase_max, phase_percent, prefix=None, postfix=None):
+    def new_phase (self, phase_max, prefix=None, postfix=None):
         # TODO simplify
-        percent = self.bar.value_normalized
-        self.bar.max = int((self.cumulative_max + phase_max) / (percent + phase_percent))
-        self.bar.value = int(self.bar.max * percent)
-        self.current_phase_max = phase_max
-        self.current_phase_percent = phase_percent
-        self.cumulative_max += phase_max
-        self.current_phase_value = 0
-        # TODO update phase info
+        self.bar.max = phase_max
+        self.bar.value = 0
+        self.current_phase += 1
 
     def step (self, steps=1):
         # TODO simplify
