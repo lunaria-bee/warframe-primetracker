@@ -100,14 +100,14 @@ class ProgressPopup (Popup):
         self.bar.max = phase_steps
         self.bar.value = 0
         self.current_phase += 1
-        self.phase_info = phase_info
+        self.phase_info = ("{} ({} / {})"
+                           .format(phase_info, current_phase, phase_count))
         self.step_prefix = step_prefix
         self.step_postfix = step_postfix
 
-    def step (self, steps=1):
-        # TODO simplify
-        self.bar.value += (steps / self.current_phase_max) * self.current_phase_percent * self.bar.max
-        self.current_phase_value += steps
+    def step (self, step_info="", steps=1):
+        self.bar.balue += 1
+        self.step_info = "{} {} {}".format(step_prefix, step_info, step_postfix)
         # TODO update step info
 
 class DbPopulatePopup (ProgressPopup):
@@ -117,13 +117,13 @@ class DbPopulatePopup (ProgressPopup):
     def populate (self):
         http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
         table = db.get_relic_drop_table(http)
-        Clock.schedule_once(lambda _: self.new_phase(len(table), .9, "Processing Relic drops"))
+        Clock.schedule_once(lambda _: self.new_phase(len(table),"Processing Relic drops"))
         for row in table:
             db.process_relic_drop_table_row(row, http)
             Clock.schedule_once(lambda _: self.step())
 
         products = db.Item.select_all_products()
-        Clock.schedule_once(lambda _: self.new_phase(len(products), .1,  "Processing build requirements"))
+        Clock.schedule_once(lambda _: self.new_phase(len(products), "Processing build requirements"))
         for product in db.Item.select_all_products():
             db.calculate_product_requirement_quantities(product)
             Clock.schedule_once(lambda _: self.step())
