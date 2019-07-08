@@ -104,7 +104,6 @@ class ProgressPopup (Popup):
     def step (self, step_info="", steps=1):
         self.bar.value += 1
         self.step_info = "{} {} {}".format(self.step_prefix, step_info, self.step_postfix)
-        # TODO update step info
 
 class DbPopulatePopup (ProgressPopup):
     def start (self):
