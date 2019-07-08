@@ -87,13 +87,9 @@ class SpinCounter (BoxLayout):
 class ProgressPopup (Popup):
     # TODO update to display phase info
     phase_count = NumericProperty()
-    current_phase = BoundedNumericProperty(0)
+    current_phase = NumericProperty()
     step_prefix = StringProperty()
     step_postfix = StringProperty()
-
-    def __init__ (self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.property('current_phase').set_max(self.phase_count)
 
     def new_phase (self, phase_steps, phase_info,
                    step_prefix=None, step_postfix=None):
