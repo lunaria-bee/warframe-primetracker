@@ -97,13 +97,13 @@ class ProgressPopup (Popup):
         self.bar.value = 0
         self.current_phase += 1
         self.phase_info = ("{} ({} / {})"
-                           .format(phase_info, current_phase, phase_count))
+                           .format(phase_info, self.current_phase, self.phase_count))
         self.step_prefix = step_prefix
         self.step_postfix = step_postfix
 
     def step (self, step_info="", steps=1):
         self.bar.value += 1
-        self.step_info = "{} {} {}".format(step_prefix, step_info, step_postfix)
+        self.step_info = "{} {} {}".format(self.step_prefix, step_info, self.step_postfix)
         # TODO update step info
 
 class DbPopulatePopup (ProgressPopup):
