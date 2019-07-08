@@ -87,7 +87,7 @@ class SpinCounter (BoxLayout):
 class ProgressPopup (Popup):
     # TODO update to display phase info
     phase_count = NumericProperty()
-    current_phase = BoundedNumericProperty()
+    current_phase = BoundedNumericProperty(0)
     step_prefix = StringProperty()
     step_postfix = StringProperty()
 
