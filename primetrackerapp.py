@@ -102,7 +102,7 @@ class ProgressPopup (Popup):
         self.step_postfix = step_postfix
 
     def step (self, step_info="", steps=1):
-        self.bar.balue += 1
+        self.bar.value += 1
         self.step_info = "{} {} {}".format(step_prefix, step_info, step_postfix)
         # TODO update step info
 
