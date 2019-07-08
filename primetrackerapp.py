@@ -88,16 +88,21 @@ class ProgressPopup (Popup):
     # TODO update to display phase info
     phase_count = NumericProperty()
     current_phase = BoundedNumericProperty()
+    step_prefix = StringProperty()
+    step_postfix = StringProperty()
 
     def __init__ (self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.property('current_phase').set_max(self.phase_count)
 
-    def new_phase (self, phase_max, prefix=None, postfix=None):
-        # TODO simplify
-        self.bar.max = phase_max
+    def new_phase (self, phase_steps, phase_info,
+                   step_prefix=None, step_postfix=None):
+        self.bar.max = phase_steps
         self.bar.value = 0
         self.current_phase += 1
+        self.phase_info = phase_info
+        self.step_prefix = step_prefix
+        self.step_postfix = step_postfix
 
     def step (self, steps=1):
         # TODO simplify
