@@ -1,7 +1,9 @@
 from peewee import *
 from bs4 import BeautifulSoup, SoupStrainer
-import certifi, urllib3
+import certifi, urllib3, os
 from kivy.logger import Logger
+
+# TODO rework population functions to work with existing database
 
 DB_PATH = 'primedb.sqlite'
 WIKI_HOME = 'http://warframe.fandom.com'
@@ -28,6 +30,7 @@ class ItemType (DataModel):
 class Item (DataModel):
     type_ = ForeignKeyField(ItemType, backref='items')
     page = TextField(null = True)
+    owned = IntegerField(default=0)
     # ducats = IntegerField(default=0)
 
     @staticmethod
@@ -50,11 +53,11 @@ class Item (DataModel):
 
     @property
     def builds (self):
-        return tuple(set(r.builds for r in self.requirements if r != self))
+        return tuple(r.builds for r in self.product_links)
 
     @property
     def needs (self):
-        return tuple(set(r.needs for r in self.requirements if r != self))
+        return tuple(r.needs for r in self.component_links)
 
     @property
     def vaulted (self):
@@ -91,8 +94,8 @@ class Relic (DataModel):
 
 # Relation Tables #
 class BuildRequirement (RelationModel):
-    needs = ForeignKeyField(Item, backref='requirements')
-    builds = ForeignKeyField(Item, backref='requirements')
+    needs = ForeignKeyField(Item, backref='product_links')
+    builds = ForeignKeyField(Item, backref='component_links')
     need_count = IntegerField(default=1)
     build_count = IntegerField(default=1)
     class Meta:
@@ -237,13 +240,17 @@ def populate (http):
 def __test_population (log_level='DEBUG'):
     Logger.setLevel(log_level)
     try:
-        os.remove(DB_PATH)
+        os.rename(DB_PATH, DB_PATH + ".bkp")
         Logger.debug("Database: {} deleted".format(DB_PATH))
     except Exception:
         Logger.debug("Database: {} not found".format(DB_PATH))
 
-    open_()
-    populate(urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
-                                 ca_certs=certifi.where()))
-    close()
-    
+    try:
+        open_()
+        populate(urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
+                                     ca_certs=certifi.where()))
+        os.remove(DB_PATH + ".bkp")
+    except Exception as e:
+        print(e)
+    finally:
+        close()
