@@ -1,6 +1,6 @@
 from peewee import *
 from bs4 import BeautifulSoup, SoupStrainer
-import certifi, urllib3
+import certifi, urllib3, os
 from kivy.logger import Logger
 
 # TODO rework population functions to work with existing database
