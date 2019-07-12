@@ -92,7 +92,7 @@ class ProgressPopup (Popup):
     step_postfix = StringProperty()
 
     def new_phase (self, phase_steps, phase_info,
-                   step_prefix=None, step_postfix=None):
+                   step_prefix="", step_postfix=""):
         self.bar.max = phase_steps
         self.bar.value = 0
         self.current_phase += 1
