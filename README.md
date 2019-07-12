@@ -2,8 +2,27 @@
 Database to track Prime acquisition in Warframe
 
 ## Use
-There is currently no (usable) user interface, so the tools can only be used through a
-Python interpreter in interactive mode.
+Use instructions are given for a *nix environment, because I'm a fool who plays
+Warframe on Linux.
+
+### GUI
+```
+$ ./primetrackerapp.py
+```
+
+Currently, the GUI can only be used to populate the database and establish an
+initial inventory of prime parts. Modifying or querying the inventory must be
+done through the command line.
+
+### Command Line
+```
+$ python3 -i primedb.py
+```
+
+The classes in primedb.py that represent the database tables have an assortment
+of virtual properties that can provide some limited imformation. Refer to the
+[peewee docs](http://docs.peewee-orm.com/en/latest/peewee/querying.html) for
+instructions on gaining more detailed information.
 
 ## Dependencies
 - [python3 (>3.7.2)](https://www.python.org/downloads/)
