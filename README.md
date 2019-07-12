@@ -4,7 +4,7 @@ Database to track Prime acquisition in Warframe
 ## Use
 ### GUI
 ```
-./primetrackerapp.py
+$ ./primetrackerapp.py
 ```
 
 Currently, the GUI can only be used to populate the database and establish an
@@ -13,7 +13,7 @@ done through the command line.
 
 ### Command Line
 ```
-python3 -i primedb.py
+$ python3 -i primedb.py
 ```
 
 The classes in primedb.py that represent the database tables have an assortment
