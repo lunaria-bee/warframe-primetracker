@@ -191,8 +191,8 @@ def process_relic_drop_table_row (row, http):
 
     # Create Relic Containment Relation #
     Containment(contains=item, inside=relic, rarity=rarity).save()
-
-    return item, relic
+    
+    return item, product, relic
 
 def calculate_product_requirement_quantities (product):
     foundry_table = product.soup.find('table', class_='foundrytable')
