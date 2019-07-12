@@ -2,6 +2,9 @@
 Database to track Prime acquisition in Warframe
 
 ## Use
+Use instructions are given for a *nix environment, because I'm a fool who plays
+Warframe on Linux.
+
 ### GUI
 ```
 $ ./primetrackerapp.py
