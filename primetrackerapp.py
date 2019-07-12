@@ -103,8 +103,9 @@ class ProgressPopup (Popup):
 
     def step (self, step_info="", steps=1):
         self.bar.value += 1
-        self.step_info.text = ("{} {} {}"
-                               .format(self.step_prefix, step_info, self.step_postfix))
+        self.step_info.text = ("{} {} {} ({:.0%})"
+                               .format(self.step_prefix, step_info, self.step_postfix,
+                                       self.bar.value / self.bar.max))
 
 class DbPopulatePopup (ProgressPopup):
     def start (self):
