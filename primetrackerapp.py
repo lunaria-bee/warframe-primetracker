@@ -96,17 +96,19 @@ class ProgressPopup (Popup):
         self.bar.max = phase_steps
         self.bar.value = 0
         self.current_phase += 1
-        self.phase_info = ("{} ({} / {})"
-                           .format(phase_info, self.current_phase, self.phase_count))
+        self.phase_info.text = ("{} ({} / {})"
+                                .format(phase_info, self.current_phase, self.phase_count))
         self.step_prefix = step_prefix
         self.step_postfix = step_postfix
 
     def step (self, step_info="", steps=1):
         self.bar.value += 1
-        self.step_info = "{} {} {}".format(self.step_prefix, step_info, self.step_postfix)
+        self.step_info.text = ("{} {} {}"
+                               .format(self.step_prefix, step_info, self.step_postfix))
 
 class DbPopulatePopup (ProgressPopup):
     def start (self):
+        self.phase_count = 2
         self.execution = Thread(target=partial(DbPopulatePopup.populate, self)).start()
 
     def populate (self):
