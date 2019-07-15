@@ -267,3 +267,14 @@ def __test_population (log_level='DEBUG'):
         print(e)
     finally:
         close()
+
+def __test_population_from_scratch (log_level='DEBUG'):
+    Logger.setLevel(log_level)
+
+    try:
+        os.rename(DB_PATH, DB_PATH + ".bkp")
+        Logger.debug("Database: {} deleted".format(DB_PATH))
+    except FileNotFoundError:
+        Logger.debug("Database: {} not found".format(DB_PATH))
+
+    __test_population(log_level)
