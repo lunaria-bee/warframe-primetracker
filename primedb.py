@@ -258,7 +258,9 @@ def populate (http):
 
 # Testing Code #
 def __test_population (log_level='DEBUG'):
+    prev_log_level = Logger.level
     Logger.setLevel(log_level)
+
     try:
         open_()
         populate(urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
@@ -268,7 +270,10 @@ def __test_population (log_level='DEBUG'):
     finally:
         close()
 
+    Logger.setLevel(prev_log_level)
+
 def __test_population_from_scratch (log_level='DEBUG'):
+    prev_log_level = Logger.level
     Logger.setLevel(log_level)
 
     try:
@@ -278,3 +283,5 @@ def __test_population_from_scratch (log_level='DEBUG'):
         Logger.debug("Database: {} not found".format(DB_PATH))
 
     __test_population(log_level)
+
+    Logger.setLevel(prev_log_level)
