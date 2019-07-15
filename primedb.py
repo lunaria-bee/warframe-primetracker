@@ -260,16 +260,9 @@ def populate (http):
 def __test_population (log_level='DEBUG'):
     Logger.setLevel(log_level)
     try:
-        os.rename(DB_PATH, DB_PATH + ".bkp")
-        Logger.debug("Database: {} deleted".format(DB_PATH))
-    except Exception:
-        Logger.debug("Database: {} not found".format(DB_PATH))
-
-    try:
         open_()
         populate(urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
                                      ca_certs=certifi.where()))
-        os.remove(DB_PATH + ".bkp")
     except Exception as e:
         print(e)
     finally:
