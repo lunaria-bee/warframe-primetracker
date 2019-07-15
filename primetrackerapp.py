@@ -113,6 +113,7 @@ class DbPopulatePopup (ProgressPopup):
         self.execution = Thread(target=partial(DbPopulatePopup.populate, self)).start()
 
     def populate (self):
+        db.population_setup()
         http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
         table = db.get_relic_drop_table(http)
         Clock.schedule_once(lambda _: self.new_phase(len(table),"Processing Relic drops"))
@@ -125,6 +126,7 @@ class DbPopulatePopup (ProgressPopup):
         for product in db.Item.select_all_products():
             db.calculate_product_requirement_quantities(product)
             Clock.schedule_once(lambda _: self.step())
+        db.population_teardown()
         self.dismiss()
 
 class InventoryInitPopup (Popup):
