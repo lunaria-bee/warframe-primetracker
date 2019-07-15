@@ -186,7 +186,7 @@ def process_relic_drop_table_row (row, http):
     relic_tier = RelicTier.get(name=contents[3].text.strip())
     relic_code = contents[4].text.strip()
     rarity = Rarity.get(name=contents[5].text.strip())
-    vaulted = contents[6].text.strip() == 'Yes'
+    vaulted = contents[6].text.strip().lower() == 'yes'
 
     Logger.debug("Database: Population: Processing {} in {} {}"
                 .format(full_name, relic_tier, relic_code))
