@@ -33,15 +33,19 @@ class Item (DataModel):
     owned = IntegerField(default=0)
     # ducats = IntegerField(default=0)
 
-    @staticmethod
-    def select_all_products ():
-        return [p for p in Item.select() if # TODO do in one query
-                BuildRequirement.select().where(BuildRequirement.builds==p)]
+    @classmethod
+    def select_all_products (cls):
+        return (cls
+                .select()
+                .join(BuildRequirement, on=BuildRequirement.builds)
+                .group_by(Item))
 
-    @staticmethod
-    def select_all_components ():
-        return [p for p in Item.select() if # TODO do in one query
-                BuildRequirement.select().where(BuildRequirement.needs==p)]
+    @classmethod
+    def select_all_components (cls):
+        return (cls
+                .select()
+                .join(BuildRequirement, on=BuildRequirement.needs)
+                .group_by(Item))
 
     @property
     def soup (self):
@@ -49,15 +53,25 @@ class Item (DataModel):
 
     @property
     def relics (self):
-        return tuple(set(c.inside for c in self.containments))
+        return (Relic
+                .select()
+                .join(Containment, on=Containment.inside)
+                .where(Containment.contains == self)
+                .group_by(Relic))
 
     @property
     def builds (self):
-        return tuple(r.builds for r in self.product_links)
+        return (self.__class__
+                .select()
+                .join(BuildRequirement, on=BuildRequirement.builds)
+                .where(BuildRequirement.needs == self))
 
     @property
     def needs (self):
-        return tuple(r.needs for r in self.component_links)
+        return (self.__class__
+                .select()
+                .join(BuildRequirement, on=BuildRequirement.needs)
+                .where(BuildRequirement.builds == self))
 
     @property
     def vaulted (self):
@@ -83,7 +97,11 @@ class Relic (DataModel):
 
     @property
     def contents (self):
-        return [c.contains for c in self.containments]
+        return (Item
+                .select()
+                .join(Containment, on=Containment.contains)
+                .where(Containment.inside == self)
+                .group_by(Item))
 
 # class MissionSector (BaseModel):
 #     pass
