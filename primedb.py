@@ -160,6 +160,14 @@ def close ():
 
 
 # Population Code #
+def population_setup ():
+    '''Call before populating the database'''
+    Containment.delete().execute()
+
+def population_teardown ():
+    '''Call after populating the database'''
+    pass
+
 def get_relic_drop_table (http):
     r = http.request('GET', WIKI_HOME + '/wiki/Void_Relic/ByRewards/SimpleTable')
     table = BeautifulSoup(r.data, 'lxml', parse_only=SoupStrainer('tr'))
@@ -263,12 +271,14 @@ def __test_population (log_level='DEBUG'):
 
     try:
         open_()
+        population_setup()
         populate(urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
                                      ca_certs=certifi.where()))
     except Exception as e:
         print(e)
     finally:
         close()
+        population_teardown()
 
     Logger.setLevel(prev_log_level)
 
