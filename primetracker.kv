@@ -84,14 +84,16 @@
                 id: spin_counter
                 pos_hint: {'right': 1, 'center_y': 0.5}
 
-BoxLayout:
+<TestingMenu>:
     orientation: 'vertical'
-    Button:
-        text: "Populate Database"
-        on_release: Factory.DbPopulatePopup().open()
-    Button:
-        text: "Initialize Inventory"
-        on_release: Factory.InventoryInitPopup().open()
+    BoxLayout:
+        orientation: 'horizontal'
+        Button:
+            text: "Populate Database"
+            on_release: Factory.DbPopulatePopup().open()
+        Button:
+            text: "Initialize Inventory"
+            on_release: Factory.InventoryInitPopup().open()
     Button:
         text: "Close App"
         on_release: app.stop()

@@ -17,7 +17,8 @@ from kivy.uix.textinput import TextInput
 from kivy.logger import Logger
 
 class PrimeTrackerApp (App):
-    pass
+    def build (self):
+        return TestingMenu()
 
 class DynamicTextInput (TextInput):
     autohighlight = BooleanProperty(True)
@@ -146,6 +147,9 @@ class InventoryInitPopup (Popup):
     def next_part (self):
         self.current_part = self.parts.pop(0)
         self.prime_prompt.text = "Enter number of {} in inventory:".format(self.current_part.name)
+
+class TestingMenu (BoxLayout):
+    pass
 
 def main ():
     PrimeTrackerApp().run()
