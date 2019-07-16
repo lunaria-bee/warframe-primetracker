@@ -41,7 +41,7 @@ class DynamicTextInput (TextInput):
     def text_dispatch (self, *args):
         self.dispatch('on_text', self, self.text)
 
-    def on_text (self, *args):
+    def on_text (self, *args): # TODO why is this here?
         pass
 
 class TestingButton (Button):
