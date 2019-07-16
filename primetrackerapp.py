@@ -142,7 +142,7 @@ class InventoryInitPopup (Popup):
         self.spin_counter.text_input.text_validate_unfocus = False
         self.spin_counter.text_input.bind(on_text_validate=self.process_next)
         self.spin_counter.set_min(0)
-        self.parts = db.Item.select_all_products() + db.Item.select_all_components()
+        self.parts = list(db.Item.select_all_products() + db.Item.select_all_components())
         self.next_part()
 
     def process_next(self, instance):
