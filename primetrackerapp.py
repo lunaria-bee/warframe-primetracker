@@ -13,6 +13,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.label import Label
+from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.logger import Logger
 
@@ -42,6 +43,12 @@ class DynamicTextInput (TextInput):
 
     def on_text (self, *args):
         pass
+
+class TestingButton (Button):
+    def on_release (self):
+        if not len(self.get_property_observers('on_release')):
+            Logger.warning("UI Testing: {} not implemented!".format(self.text))
+        super().on_release()
 
 class SpinCounter (BoxLayout):
     default = NumericProperty(0)

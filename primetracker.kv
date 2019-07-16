@@ -1,5 +1,4 @@
 #:import Factory kivy.factory.Factory
-#:import Logger kivy.logger
 
 # <ProgressPopup>:
 #     bar: bar
@@ -8,6 +7,9 @@
 #         id: bar
 
 # TODO set max and min height for popups
+
+<TestingButton>:
+    test: "Testing Button"
 
 <SpinCounter>:
     orientation: 'horizontal'
@@ -89,19 +91,19 @@
     orientation: 'vertical'
     BoxLayout:
         orientation: 'horizontal'
-        Button:
+        TestingButton:
             text: "Populate Database"
             on_release: Factory.DbPopulatePopup().open()
-        Button:
+        TestingButton:
             text: "Initialize Inventory"
             on_release: Factory.InventoryInitPopup().open()
     BoxLayout:
         orientation: 'horizontal'
-        Button:
+        TestingButton:
             text: "Show Product"
-        Button:
+        TestingButton:
             text: "Show Component"
-        Button:
+        TestingButton:
             text: "Show Relic"
     Button:
         text: "Close App"
