@@ -147,6 +147,9 @@ class InventoryInitPopup (Popup):
 
     def process_next(self, instance):
         if self.spin_counter.check_input():
+            if len(self.parts) <= 0: # if no parts left
+                self.dismiss()
+                return
             self.next_part()
             self.spin_counter.reset()
         self.spin_counter.focus = True
