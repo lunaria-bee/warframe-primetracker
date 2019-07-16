@@ -147,6 +147,8 @@ class InventoryInitPopup (Popup):
 
     def process_next(self, instance):
         if self.spin_counter.check_input():
+            self.current_part.owned = int(self.spin_counter.text_input.text)
+            self.current_part.save()
             if len(self.parts) <= 0: # if no parts left
                 self.dismiss()
                 return
