@@ -1,4 +1,5 @@
 #:import Factory kivy.factory.Factory
+#:import Logger kivy.logger
 
 # <ProgressPopup>:
 #     bar: bar
@@ -94,6 +95,14 @@
         Button:
             text: "Initialize Inventory"
             on_release: Factory.InventoryInitPopup().open()
+    BoxLayout:
+        orientation: 'horizontal'
+        Button:
+            text: "Show Product"
+        Button:
+            text: "Show Component"
+        Button:
+            text: "Show Relic"
     Button:
         text: "Close App"
         on_release: app.stop()
