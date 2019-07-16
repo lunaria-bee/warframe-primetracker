@@ -15,6 +15,9 @@
     orientation: 'horizontal'
     size: 64, 32
     text_input: text_input
+    up_button: up_button
+    down_button: down_button
+    ok_button: ok_button
     DynamicTextInput:
         id: text_input
         multiline: False
@@ -33,14 +36,17 @@
                 text: '+'
                 on_press: root.adjust(1)
                 on_release: root.text_input.focus = True
+                id: up_button
             Button:
                 text: '-'
                 on_press: root.adjust(-1)
                 on_release: root.text_input.focus = True
+                id: down_button
         Button:
             text: 'Ok'
             on_press: text_input.dispatch('on_text_validate')
             on_release: root.text_input.focus = True
+            id: ok_button
 
 <ProgressPopup>:
     bar: bar
