@@ -106,7 +106,6 @@
         width: self.height
     Label:
         id: label
-        text: 'TEST'
 
 <ItemView>:
     orientation: 'vertical'
@@ -138,7 +137,7 @@
         orientation: 'horizontal'
         TestingButton:
             text: "Show Product"
-            on_release: root._test_item_view()
+            on_release: root._test_product_view('Volt Prime')
         TestingButton:
             text: "Show Component"
         TestingButton:
