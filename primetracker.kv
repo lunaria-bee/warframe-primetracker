@@ -98,15 +98,19 @@
                 id: spin_counter
                 pos_hint: {'right': 1, 'center_y': 0.5}
 
+<ItemListing>:
+    orientation: 'horizontal'
+    Image:
+        size_hint_y: 1
+        width: self.height
+    Label:
+        text: 'TEST'
+
 # TODO basic ItemView
 <ItemView>:
     orientation: 'vertical'
-    BoxLayout:
+    ItemListing:
         id: heading
-        orientation: 'horizontal'
-        Image:
-        Button:
-            text: 'TEST'
     AnchorLayout:
         anchor_x: 'right'
         anchor_y: 'center'
