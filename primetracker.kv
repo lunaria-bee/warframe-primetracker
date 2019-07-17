@@ -98,8 +98,23 @@
                 id: spin_counter
                 pos_hint: {'right': 1, 'center_y': 0.5}
 
-
 # TODO basic ItemView
+<ItemView>:
+    orientation: 'vertical'
+    BoxLayout:
+        id: heading
+        orientation: 'horizontal'
+        Image:
+        Button:
+            text: 'TEST'
+    AnchorLayout:
+        anchor_x: 'right'
+        anchor_y: 'center'
+        BoxLayout:
+            id: sublist
+            orientation: 'vertical'
+            size_hint_x: 0.8
+
 # TODO ProductView
 # TODO ComponentView
 # TODO RelicView
@@ -118,6 +133,7 @@
         orientation: 'horizontal'
         TestingButton:
             text: "Show Product"
+            on_release: root.clear_widgets(); root.add_widget(Factory.ItemView())
         TestingButton:
             text: "Show Component"
         TestingButton:

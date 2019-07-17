@@ -160,6 +160,10 @@ class InventoryInitPopup (Popup):
         self.current_part = self.parts.pop(0)
         self.prime_prompt.text = "Enter number of {} in inventory:".format(self.current_part.name)
 
+class ItemView (BoxLayout):
+    # TODO method to add item to sublist
+    pass
+
 class TestingMenu (BoxLayout):
     pass
 
