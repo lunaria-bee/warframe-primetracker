@@ -167,6 +167,9 @@ class ItemView (BoxLayout):
     # TODO method to add item to sublist
     pass
 
+class ProductView (ItemView):
+    pass
+
 class TestingMenu (BoxLayout):
     pass
 
