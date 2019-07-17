@@ -165,13 +165,21 @@ class ItemListing (BoxLayout):
 
 class ItemView (BoxLayout):
     # TODO method to add item to sublist
-    pass
+    def add_sublist_item (self, item):
+        '''TODO'''
+        item_listing = ItemListing()
+        item_listing.ids.label.text = item.name
+        self.ids.sublist.add_widget(item_listing)
 
 class ProductView (ItemView):
     pass
 
 class TestingMenu (BoxLayout):
-    pass
+    def _test_item_view (self):
+        item_view = ItemView()
+        item_view.add_sublist_item(db.Item.get(name='Volt Prime'))
+        self.clear_widgets()
+        self.add_widget(item_view)
 
 def main ():
     PrimeTrackerApp().run()
