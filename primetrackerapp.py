@@ -13,6 +13,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.label import Label
+from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.logger import Logger
 
@@ -40,8 +41,14 @@ class DynamicTextInput (TextInput):
     def text_dispatch (self, *args):
         self.dispatch('on_text', self, self.text)
 
-    def on_text (self, *args):
+    def on_text (self, *args): # TODO why is this here?
         pass
+
+class TestingButton (Button):
+    def on_release (self):
+        if not len(self.get_property_observers('on_release')):
+            Logger.warning("UI Testing: {} not implemented!".format(self.text))
+        super().on_release()
 
 class SpinCounter (BoxLayout):
     default = NumericProperty(0)
@@ -135,11 +142,16 @@ class InventoryInitPopup (Popup):
         self.spin_counter.text_input.text_validate_unfocus = False
         self.spin_counter.text_input.bind(on_text_validate=self.process_next)
         self.spin_counter.set_min(0)
-        self.parts = db.Item.select_all_products() + db.Item.select_all_components()
+        self.parts = list(db.Item.select_all_products() + db.Item.select_all_components())
         self.next_part()
 
     def process_next(self, instance):
         if self.spin_counter.check_input():
+            self.current_part.owned = int(self.spin_counter.text_input.text)
+            self.current_part.save()
+            if len(self.parts) <= 0: # if no parts left
+                self.dismiss()
+                return
             self.next_part()
             self.spin_counter.reset()
         self.spin_counter.focus = True

@@ -1,5 +1,4 @@
 #:import Factory kivy.factory.Factory
-#:import Logger kivy.logger
 
 # <ProgressPopup>:
 #     bar: bar
@@ -9,10 +8,16 @@
 
 # TODO set max and min height for popups
 
+<TestingButton>:
+    test: "Testing Button"
+
 <SpinCounter>:
     orientation: 'horizontal'
     size: 64, 32
     text_input: text_input
+    up_button: up_button
+    down_button: down_button
+    ok_button: ok_button
     DynamicTextInput:
         id: text_input
         multiline: False
@@ -24,16 +29,24 @@
         input_filter: 'int'
         on_text: if(self.text): root.value = int(self.text)
     BoxLayout:
-        orientation: 'vertical'
-        size_hint_x: 0.4
+        orientation: 'horizontal'
+        BoxLayout:
+            orientation: 'vertical'
+            Button:
+                text: '+'
+                on_press: root.adjust(1)
+                on_release: root.text_input.focus = True
+                id: up_button
+            Button:
+                text: '-'
+                on_press: root.adjust(-1)
+                on_release: root.text_input.focus = True
+                id: down_button
         Button:
-            text: '+'
-            on_press: root.adjust(1)
+            text: 'Ok'
+            on_press: text_input.dispatch('on_text_validate')
             on_release: root.text_input.focus = True
-        Button:
-            text: '-'
-            on_press: root.adjust(-1)
-            on_release: root.text_input.focus = True
+            id: ok_button
 
 <ProgressPopup>:
     bar: bar
@@ -95,19 +108,19 @@
     orientation: 'vertical'
     BoxLayout:
         orientation: 'horizontal'
-        Button:
+        TestingButton:
             text: "Populate Database"
             on_release: Factory.DbPopulatePopup().open()
-        Button:
+        TestingButton:
             text: "Initialize Inventory"
             on_release: Factory.InventoryInitPopup().open()
     BoxLayout:
         orientation: 'horizontal'
-        Button:
+        TestingButton:
             text: "Show Product"
-        Button:
+        TestingButton:
             text: "Show Component"
-        Button:
+        TestingButton:
             text: "Show Relic"
     Button:
         text: "Close App"
