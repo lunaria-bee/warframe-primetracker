@@ -164,12 +164,16 @@ class ItemListing (BoxLayout):
     pass
 
 class ItemView (BoxLayout):
+    item_count = NumericProperty(1)
+
     # TODO method to add item to sublist
     def add_sublist_item (self, item):
         '''TODO'''
+        self.item_count += 1
         item_listing = ItemListing()
         item_listing.ids.label.text = item.name
         self.ids.sublist.add_widget(item_listing)
+        self.ids.heading.size_hint_y = 1.5 / self.item_count
 
 class ProductView (ItemView):
     def __init__ (self, product, *args, **kwargs):
