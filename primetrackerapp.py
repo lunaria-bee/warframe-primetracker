@@ -196,9 +196,9 @@ class TestingMenu (BoxLayout):
         self.clear_widgets()
         self.add_widget(item_view)
 
-    def _test_product_view (self, product):
+    def _test_product_view (self, product_name):
         self.clear_widgets()
-        self.add_widget(ProductView(db.Item.get(name='Volt Prime')))
+        self.add_widget(ProductView(db.Item.get(name=product_name)))
 
     def _test_component_view (self, component_name):
         self.clear_widgets()
