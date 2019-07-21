@@ -169,7 +169,7 @@ class ItemListing (BoxLayout):
         pass
 
     def on_item_name (self, instance, value):
-        self.ids.label.text = self.item_name
+        instance.ids.label.text = value
 
 class ItemView (BoxLayout):
     item_count = NumericProperty(1)
