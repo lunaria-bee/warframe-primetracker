@@ -47,7 +47,7 @@ class DynamicTextInput (TextInput):
 class TestingButton (Button):
     def on_release (self):
         if not len(self.get_property_observers('on_release')):
-            Logger.warning("UI Testing: {} not implemented!".format(self.text))
+            Logger.warning("UI Testing: {} Test not implemented!".format(self.text))
         super().on_release()
 
 class SpinCounter (BoxLayout):
