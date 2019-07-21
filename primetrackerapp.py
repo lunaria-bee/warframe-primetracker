@@ -174,6 +174,7 @@ class ItemView (BoxLayout):
         item_listing.ids.label.text = item.name
         self.ids.sublist.add_widget(item_listing)
         self.ids.heading.size_hint_y = 1.5 / self.item_count
+        return item_listing
 
 class ProductView (ItemView):
     def __init__ (self, product, *args, **kwargs):
@@ -193,8 +194,12 @@ class RelicView (ItemView):
     def __init__ (self, relic, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ids.heading.ids.label.text = relic.name
-        for item in relic.contents.order_by(db.Containment.rarity):
-            self.add_sublist_item(item)
+        for containment in relic.containments.order_by(db.Containment.rarity):
+            self.add_sublist_item(containment)
+
+    def add_sublist_item (self, containment):
+        item_listing = super().add_sublist_item(containment.contains)
+        item_listing.ids.label.text += "\n{}".format(containment.rarity)
 
 class TestingMenu (BoxLayout):
     def _test_item_view (self):
