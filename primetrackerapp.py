@@ -201,7 +201,16 @@ class RelicView (ItemView):
         item_listing = super().add_sublist_item(containment.contains)
         item_listing.ids.label.text += "\n{}".format(containment.rarity)
 
+class ItemSearch (BoxLayout):
+    pass
+
 class TestingMenu (BoxLayout):
+    def _test_item_search (self):
+        item_search = ItemSearch()
+        self.clear_widgets()
+        self.add_widget(item_search)
+        item_search.ids.search_bar.height = 20
+
     def _test_item_view (self):
         item_view = ItemView()
         item_view.add_sublist_item(db.Item.get(name='Volt Prime'))

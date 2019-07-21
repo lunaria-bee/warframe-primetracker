@@ -120,6 +120,19 @@
             orientation: 'vertical'
             size_hint_x: 0.8
 
+<ItemSearch>:
+    orientation: 'vertical'
+    DynamicTextInput:
+        id: search_bar
+        autohighlight: False
+        font_size: 26
+        size_hint_max_y: self.font_size * 1.8
+        hint_text: "Enter search term..."
+    ScrollView:
+        do_scroll_x: False
+        BoxLayout:
+            id: resultlist
+
 <TestingMenu>:
     orientation: 'vertical'
     BoxLayout:
@@ -130,6 +143,9 @@
         TestingButton:
             text: "Initialize Inventory"
             on_release: Factory.InventoryInitPopup().open()
+        TestingButton:
+            text: "Search Database"
+            on_release: root._test_item_search()
     BoxLayout:
         orientation: 'horizontal'
         TestingButton:
