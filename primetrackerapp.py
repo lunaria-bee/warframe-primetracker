@@ -182,6 +182,13 @@ class ProductView (ItemView):
         for component in product.needs:
             self.add_sublist_item(component)
 
+class ComponentView (ItemView):
+    def __init__ (self, component, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ids.heading.ids.label.text = component.name
+        for product in component.builds:
+            self.add_sublist_item(product)
+
 class TestingMenu (BoxLayout):
     def _test_item_view (self):
         item_view = ItemView()
@@ -192,6 +199,10 @@ class TestingMenu (BoxLayout):
     def _test_product_view (self, product):
         self.clear_widgets()
         self.add_widget(ProductView(db.Item.get(name='Volt Prime')))
+
+    def _test_component_view (self, component_name):
+        self.clear_widgets()
+        self.add_widget(ComponentView(db.Item.get(name=component_name)))
 
 def main ():
     PrimeTrackerApp().run()
