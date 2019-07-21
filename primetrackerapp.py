@@ -21,6 +21,12 @@ class PrimeTrackerApp (App):
     def build (self):
         return TestingMenu()
 
+class TestingButton (Button):
+    def on_release (self):
+        if not len(self.get_property_observers('on_release')):
+            Logger.warning("UI Testing: {} Test not implemented!".format(self.text))
+        super().on_release()
+
 class DynamicTextInput (TextInput):
     autohighlight = BooleanProperty(True)
 
@@ -43,12 +49,6 @@ class DynamicTextInput (TextInput):
 
     def on_text (self, *args): # TODO why is this here?
         pass
-
-class TestingButton (Button):
-    def on_release (self):
-        if not len(self.get_property_observers('on_release')):
-            Logger.warning("UI Testing: {} Test not implemented!".format(self.text))
-        super().on_release()
 
 class SpinCounter (BoxLayout):
     default = NumericProperty(0)
