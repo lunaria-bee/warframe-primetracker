@@ -161,7 +161,15 @@ class InventoryInitPopup (Popup):
         self.prime_prompt.text = "Enter number of {} in inventory:".format(self.current_part.name)
 
 class ItemListing (BoxLayout):
-    pass
+    image_path = StringProperty()
+    item_name = StringProperty()
+
+    def on_image_path (self, instance, value):
+        # TODO set from an index of already loaded textures
+        pass
+
+    def on_item_name (self, instance, value):
+        self.ids.label.text = self.item_name
 
 class ItemView (BoxLayout):
     item_count = NumericProperty(1)
