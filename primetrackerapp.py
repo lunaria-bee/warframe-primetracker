@@ -189,6 +189,13 @@ class ComponentView (ItemView):
         for product in component.builds:
             self.add_sublist_item(product)
 
+class RelicView (ItemView):
+    def __init__ (self, relic, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ids.heading.ids.label.text = relic.name
+        for item in relic.contents.order_by(db.Containment.rarity):
+            self.add_sublist_item(item)
+
 class TestingMenu (BoxLayout):
     def _test_item_view (self):
         item_view = ItemView()
@@ -203,6 +210,10 @@ class TestingMenu (BoxLayout):
     def _test_component_view (self, component_name):
         self.clear_widgets()
         self.add_widget(ComponentView(db.Item.get(name=component_name)))
+
+    def _test_relic_view (self):
+        self.clear_widgets()
+        self.add_widget(RelicView(db.Relic.select()[0]))
 
 def main ():
     PrimeTrackerApp().run()
