@@ -198,6 +198,7 @@ class RelicView (ItemView):
             self.add_sublist_item(containment)
 
     def add_sublist_item (self, containment):
+        # TODO modify to use ItemListing properties
         item_listing = super().add_sublist_item(containment.contains)
         item_listing.ids.label.text += "\n{}".format(containment.rarity)
 
