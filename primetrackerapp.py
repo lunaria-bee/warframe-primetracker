@@ -171,8 +171,7 @@ class ItemView (BoxLayout):
     def add_sublist_item (self, item):
         '''TODO'''
         self.item_count += 1
-        item_listing = ItemListing()
-        item_listing.ids.label.text = item.name
+        item_listing = ItemListing(item_name = item.name)
         self.ids.sublist.add_widget(item_listing)
         self.ids.heading.size_hint_y = 1.5 / self.item_count
         return item_listing
