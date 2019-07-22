@@ -84,10 +84,10 @@ class SpinCounter (BoxLayout):
         super().__init__(*args, **kwargs)
         self.reset()
 
-    def set_max (self, max_): # TODO make unnecessary
+    def set_max (self, max_):
         self.property('value').set_max(self, max_)
 
-    def set_min (self, min_): # TODO make unnecessary
+    def set_min (self, min_):
         self.property('value').set_min(self, min_)
 
     def reset (self):
