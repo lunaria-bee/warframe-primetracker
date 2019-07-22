@@ -9,8 +9,10 @@ from functools import partial
 from kivy.properties import *
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
+from kivy.uix.tabbedpanel import TabbedPanelItem
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.label import Label
 from kivy.uix.button import Button
@@ -261,11 +263,18 @@ class ItemListing (BoxLayout):
 
 class ItemList (BoxLayout):
     '''TODO'''
-    def add_listing (self, list_item):
+    def add_listing (self, item):
         '''TODO'''
-        item_listing = ItemListing(item_name = item.name, size_hint_max_x = 56)
+        self.remove_widget(self.children[0])
+        item_listing = ItemListing(item_name = item.name, size_hint_max_y = 128)
         self.add_widget(item_listing)
+        self.add_widget(Widget())
         return item_listing
+
+class ItemListTab (TabbedPanelItem):
+    '''TODO'''
+    def add_listing (self, item):
+        self.ids.item_list.add_listing(item)
 
 class ItemView (BoxLayout):
     '''Shows detailed information about a database entry
@@ -276,21 +285,16 @@ class ItemView (BoxLayout):
     '''
     item_count = NumericProperty(1)
 
-    def add_sublist_item (self, item):
-        '''TODO'''
-        self.item_count += 1
-        item_listing = ItemListing(item_name = item.name)
-        self.ids.sublist.add_widget(item_listing)
-        self.ids.heading.size_hint_y = 1.5 / self.item_count
-        return item_listing
-
 class ProductView (ItemView):
     '''Shows information about a product (e.g. a built prime)'''
     def __init__ (self, product, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ids.heading.ids.label.text = product.name
+        self.ids.component_tab = ItemListTab(text = "Components")
+        self.ids.sublist_tabs.add_widget(self.ids.component_tab)
+        self.ids.sublist_tabs.default_tab = self.ids.component_tab
         for component in product.needs:
-            self.add_sublist_item(component)
+            self.ids.component_tab.add_listing(component)
 
 class ComponentView (ItemView):
     '''Shows information about a component (e.g. a prime part)'''

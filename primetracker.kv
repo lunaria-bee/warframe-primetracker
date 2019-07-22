@@ -111,19 +111,21 @@
 
 <ItemList>:
     orientation: 'vertical'
+    Widget:
+
+<ItemListTab>:
+    ItemList:
+        id: item_list
 
 <ItemView>:
     orientation: 'vertical'
     ItemListing:
         id: heading
-        size_hint_max_x: 80
-    AnchorLayout:
-        anchor_x: 'right'
-        anchor_y: 'center'
-        BoxLayout:
-            id: sublist
-            orientation: 'vertical'
-            size_hint_x: 0.8
+        size_hint_max_y: 156
+    TabbedPanel:
+        id: sublist_tabs
+        tab_pos: 'left_top'
+        # do_default_tab: False
 
 <TestingMenu>:
     orientation: 'vertical'
