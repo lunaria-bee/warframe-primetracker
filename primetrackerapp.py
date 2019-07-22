@@ -161,7 +161,8 @@ class InventoryInitPopup (Popup):
         self.prime_prompt.text = "Enter number of {} in inventory:".format(self.current_part.name)
 
 class ItemListing (BoxLayout):
-    pass
+    image_path = StringProperty()
+    item_name = StringProperty()
 
 class ItemView (BoxLayout):
     item_count = NumericProperty(1)
@@ -170,8 +171,7 @@ class ItemView (BoxLayout):
     def add_sublist_item (self, item):
         '''TODO'''
         self.item_count += 1
-        item_listing = ItemListing()
-        item_listing.ids.label.text = item.name
+        item_listing = ItemListing(item_name = item.name)
         self.ids.sublist.add_widget(item_listing)
         self.ids.heading.size_hint_y = 1.5 / self.item_count
         return item_listing
@@ -186,20 +186,21 @@ class ProductView (ItemView):
 class ComponentView (ItemView):
     def __init__ (self, component, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ids.heading.ids.label.text = component.name
+        self.ids.heading.item_name = component.name
         for product in component.builds:
             self.add_sublist_item(product)
 
 class RelicView (ItemView):
     def __init__ (self, relic, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ids.heading.ids.label.text = relic.name
+        self.ids.heading.item_name = relic.name
         for containment in relic.containments.order_by(db.Containment.rarity):
             self.add_sublist_item(containment)
 
     def add_sublist_item (self, containment):
+        # TODO modify to use ItemListing properties
         item_listing = super().add_sublist_item(containment.contains)
-        item_listing.ids.label.text += "\n{}".format(containment.rarity)
+        item_listing.item_name += "\n{}".format(containment.rarity)
 
 class TestingMenu (BoxLayout):
     def _test_item_view (self):
