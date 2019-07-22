@@ -85,9 +85,11 @@ class SpinCounter (BoxLayout):
         self.reset()
 
     def set_max (self, max_):
+        '''Set the maximum valid input value'''
         self.property('value').set_max(self, max_)
 
     def set_min (self, min_):
+        '''Set the minimum valid input value'''
         self.property('value').set_min(self, min_)
 
     def reset (self):
