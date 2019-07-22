@@ -22,12 +22,15 @@ class PrimeTrackerApp (App):
         return TestingMenu()
 
 class TestingButton (Button):
+    '''TODO'''
     def on_release (self):
+        '''TODO'''
         if not len(self.get_property_observers('on_release')):
             Logger.warning("UI Testing: {} Test not implemented!".format(self.text))
         super().on_release()
 
 class DynamicTextInput (TextInput):
+    '''TODO'''
     autohighlight = BooleanProperty(True)
 
     def __init__ (self, *args, **kwargs):
@@ -38,19 +41,24 @@ class DynamicTextInput (TextInput):
         self.bind(text=self.text_dispatch)
 
     def focus_dispatch (self, *args):
+        '''TODO'''
         self.dispatch('on_focus', self, self.focus)
 
     def on_focus (self, instance, value):
+        '''TODO'''
         if value and self.autohighlight:
             Clock.schedule_once(lambda _: self.select_all())
 
     def text_dispatch (self, *args):
+        '''TODO'''
         self.dispatch('on_text', self, self.text)
 
-    def on_text (self, *args): # TODO why is this here?
+    def on_text (self, *args):
+        '''TODO'''
         pass
 
 class SpinCounter (BoxLayout):
+    '''TODO'''
     default = NumericProperty(0)
     value = BoundedNumericProperty(0, min=None, max=None)
 
@@ -58,22 +66,25 @@ class SpinCounter (BoxLayout):
         super().__init__(*args, **kwargs)
         self.reset()
 
-    def set_max (self, max_):
+    def set_max (self, max_): # TODO make unnecessary
         self.property('value').set_max(self, max_)
 
-    def set_min (self, min_):
+    def set_min (self, min_): # TODO make unnecessary
         self.property('value').set_min(self, min_)
 
     def reset (self):
+        '''TODO'''
         self.value = self.default
 
     def adjust (self, change):
+        '''TODO'''
         try:
             self.value += change
         except ValueError:
             pass
 
     def check_input (self):
+        '''TODO'''
         try:
             self.value = int(self.text_input.text)
             return True
@@ -89,11 +100,11 @@ class SpinCounter (BoxLayout):
             return False
 
     def on_value (self, instance, value):
+        '''TODO'''
         self.text_input.text = str(self.value)
 
-# TODO finished phased progress bars
 class ProgressPopup (Popup):
-    # TODO update to display phase info
+    '''TODO'''
     phase_count = NumericProperty()
     current_phase = NumericProperty()
     step_prefix = StringProperty()
@@ -101,6 +112,7 @@ class ProgressPopup (Popup):
 
     def new_phase (self, phase_steps, phase_info,
                    step_prefix="", step_postfix=""):
+        '''TODO'''
         self.bar.max = phase_steps
         self.bar.value = 0
         self.current_phase += 1
@@ -110,17 +122,21 @@ class ProgressPopup (Popup):
         self.step_postfix = step_postfix
 
     def step (self, step_info="", steps=1):
+        '''TODO'''
         self.bar.value += 1
         self.step_info.text = ("{} {} {} ({:.0%})"
                                .format(self.step_prefix, step_info, self.step_postfix,
                                        self.bar.value / self.bar.max))
 
 class DbPopulatePopup (ProgressPopup):
+    '''TODO'''
     def start (self):
+        '''TODO'''
         self.phase_count = 2
         self.execution = Thread(target=partial(DbPopulatePopup.populate, self)).start()
 
     def populate (self):
+        '''TODO'''
         db.population_setup()
         http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
         table = db.get_relic_drop_table(http)
@@ -138,7 +154,9 @@ class DbPopulatePopup (ProgressPopup):
         self.dismiss()
 
 class InventoryInitPopup (Popup):
+    '''TODO'''
     def parts_init (self):
+        '''TODO'''
         self.spin_counter.text_input.text_validate_unfocus = False
         self.spin_counter.text_input.bind(on_text_validate=self.process_next)
         self.spin_counter.set_min(0)
@@ -146,6 +164,7 @@ class InventoryInitPopup (Popup):
         self.next_part()
 
     def process_next(self, instance):
+        '''TODO'''
         if self.spin_counter.check_input():
             self.current_part.owned = int(self.spin_counter.text_input.text)
             self.current_part.save()
@@ -157,17 +176,19 @@ class InventoryInitPopup (Popup):
         self.spin_counter.focus = True
 
     def next_part (self):
+        '''TODO'''
         self.current_part = self.parts.pop(0)
         self.prime_prompt.text = "Enter number of {} in inventory:".format(self.current_part.name)
 
 class ItemListing (BoxLayout):
+    '''TODO'''
     image_path = StringProperty()
     item_name = StringProperty()
 
 class ItemView (BoxLayout):
+    '''TODO'''
     item_count = NumericProperty(1)
 
-    # TODO method to add item to sublist
     def add_sublist_item (self, item):
         '''TODO'''
         self.item_count += 1
@@ -177,6 +198,7 @@ class ItemView (BoxLayout):
         return item_listing
 
 class ProductView (ItemView):
+    '''TODO'''
     def __init__ (self, product, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ids.heading.ids.label.text = product.name
@@ -184,6 +206,7 @@ class ProductView (ItemView):
             self.add_sublist_item(component)
 
 class ComponentView (ItemView):
+    '''TODO'''
     def __init__ (self, component, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ids.heading.item_name = component.name
@@ -191,6 +214,7 @@ class ComponentView (ItemView):
             self.add_sublist_item(product)
 
 class RelicView (ItemView):
+    '''TODO'''
     def __init__ (self, relic, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ids.heading.item_name = relic.name
@@ -198,7 +222,7 @@ class RelicView (ItemView):
             self.add_sublist_item(containment)
 
     def add_sublist_item (self, containment):
-        # TODO modify to use ItemListing properties
+        '''TODO'''
         item_listing = super().add_sublist_item(containment.contains)
         item_listing.item_name += "\n{}".format(containment.rarity)
 
