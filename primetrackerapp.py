@@ -186,7 +186,7 @@ class ProductView (ItemView):
 class ComponentView (ItemView):
     def __init__ (self, component, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ids.heading.ids.label.text = component.name
+        self.ids.heading.item_name = component.name
         for product in component.builds:
             self.add_sublist_item(product)
 
