@@ -109,10 +109,14 @@
         halign: 'left'
         text: root.item_name
 
+<ItemList>:
+    orientation: 'vertical'
+
 <ItemView>:
     orientation: 'vertical'
     ItemListing:
         id: heading
+        size_hint_max_x: 80
     AnchorLayout:
         anchor_x: 'right'
         anchor_y: 'center'

@@ -259,6 +259,14 @@ class ItemListing (BoxLayout):
     image_path = StringProperty()
     item_name = StringProperty()
 
+class ItemList (BoxLayout):
+    '''TODO'''
+    def add_listing (self, list_item):
+        '''TODO'''
+        item_listing = ItemListing(item_name = item.name, size_hint_max_x = 56)
+        self.add_widget(item_listing)
+        return item_listing
+
 class ItemView (BoxLayout):
     '''Shows detailed information about a database entry
 
