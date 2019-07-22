@@ -193,14 +193,14 @@ class ComponentView (ItemView):
 class RelicView (ItemView):
     def __init__ (self, relic, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ids.heading.ids.label.text = relic.name
+        self.ids.heading.item_name = relic.name
         for containment in relic.containments.order_by(db.Containment.rarity):
             self.add_sublist_item(containment)
 
     def add_sublist_item (self, containment):
         # TODO modify to use ItemListing properties
         item_listing = super().add_sublist_item(containment.contains)
-        item_listing.ids.label.text += "\n{}".format(containment.rarity)
+        item_listing.item_name += "\n{}".format(containment.rarity)
 
 class TestingMenu (BoxLayout):
     def _test_item_view (self):
