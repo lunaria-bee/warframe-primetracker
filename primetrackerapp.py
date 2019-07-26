@@ -301,8 +301,14 @@ class ComponentView (ItemView):
     def __init__ (self, component, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ids.heading.item_name = component.name
-        for product in component.builds:
-            self.add_sublist_item(product)
+
+        # Create and Populate Relics Tab #
+        self.ids.relic_tab = ItemListTab(text = "Relics")
+        self.ids.sublist_tabs.add_widget(self.ids.relic_tab)
+
+        # Create and Populate Products Tab #
+        self.ids.product_tab = ItemListTab(text = "Products")
+        self.ids.sublist_tabs.add_widget(self.ids.product_tab)
 
 class RelicView (ItemView):
     '''Shows information about a relic'''
