@@ -360,6 +360,9 @@ class TestingMenu (BoxLayout):
         self.clear_widgets()
         self.add_widget(RelicView(db.Relic.select()[0]))
 
+    def _test_DbItemEntry_subclasses (self):
+        pass
+
 def main ():
     PrimeTrackerApp().run()
 

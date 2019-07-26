@@ -151,6 +151,11 @@
         TestingButton:
             text: "Show Relic"
             on_release: root._test_relic_view()
+    BoxLayout:
+        orientation: 'horizontal'
+        TestingButton:
+            "DbEntryListing"
+            # on_release: root_test_DbItemEntry_subclasses()
     Button:
         text: "Close App"
         on_release: app.stop()
