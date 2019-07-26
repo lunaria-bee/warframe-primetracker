@@ -127,8 +127,13 @@
         tab_pos: 'left_top'
         # do_default_tab: False
 
+<TestHeading@Label>:
+    size_hint_max_y: 36
+
 <TestingMenu>:
     orientation: 'vertical'
+    TestHeading:
+        text: "SETUP TESTS"
     BoxLayout:
         orientation: 'horizontal'
         TestingButton:
@@ -137,6 +142,8 @@
         TestingButton:
             text: "Initialize Inventory"
             on_release: Factory.InventoryInitPopup().open()
+    TestHeading:
+        text: "SEARCH AND VIEW TESTS"
     BoxLayout:
         orientation: 'horizontal'
         TestingButton:
@@ -148,6 +155,8 @@
         TestingButton:
             text: "Show Relic"
             on_release: root._test_relic_view()
+    TestHeading:
+        text: "UNIT TESTS"
     Button:
         text: "Close App"
         on_release: app.stop()
