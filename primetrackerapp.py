@@ -268,8 +268,7 @@ class DbItemListing (DbEntryListing):
             Logger.error("GUI: Tried to create DbItemListing from {}".format(repr(item)))
             raise TypeError("Entry for to DbItemListing must be an instance of Item, not {}"
                             .format(type(item)))
-
-        self.entry = item
+        super().__init__(entry=item, **kwargs)
 
 class DbEntryList (BoxLayout):
     '''TODO'''
