@@ -261,7 +261,7 @@ class DbEntryListing (BoxLayout):
     image_path = StringProperty()
     item_name = StringProperty()
 
-class ItemList (BoxLayout):
+class DbEntryList (BoxLayout):
     '''TODO'''
     def add_listing (self, item):
         '''TODO'''
