@@ -259,7 +259,7 @@ class InventoryInitPopup (Popup):
 class DbEntryListing (BoxLayout):
     '''Image, name and information about an database entry'''
     image_path = StringProperty()
-    item_name = StringProperty()
+    entry = ObjectProperty()
 
 class DbEntryList (BoxLayout):
     '''TODO'''
