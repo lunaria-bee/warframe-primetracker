@@ -309,6 +309,9 @@ class ComponentView (ItemView):
         # Create and Populate Products Tab #
         self.ids.product_tab = ItemListTab(text = "Products")
         self.ids.sublist_tabs.add_widget(self.ids.product_tab)
+        for product in component.builds:
+            self.ids.product_tab.add_listing(product)
+        self.ids.sublist_tabs.default_tab = self.ids.product_tab
 
 class RelicView (ItemView):
     '''Shows information about a relic'''
