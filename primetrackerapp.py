@@ -261,6 +261,16 @@ class DbEntryListing (BoxLayout):
     image_path = StringProperty()
     entry = ObjectProperty()
 
+class DbItemListing (DbEntryListing):
+    def __init__ (self, item, **kwargs):
+        # Check Type #
+        if not isinstance(item, db.Item):
+            Logger.error("GUI: Tried to create DbItemListing from {}".format(repr(item)))
+            raise TypeError("Entry for to DbItemListing must be an instance of Item, not {}"
+                            .format(type(item)))
+
+        self.entry = item
+
 class DbEntryList (BoxLayout):
     '''TODO'''
     def add_listing (self, item):
