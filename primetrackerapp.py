@@ -359,7 +359,7 @@ class TestingMenu (BoxLayout):
         self.clear_widgets()
         self.add_widget(RelicView(db.Relic.select()[0]))
 
-    def _test_DbItemEntry_subclasses (self):
+    def _test_DbEntryListing_subclasses (self):
         print(DbItemListing(db.Item(name="Product Two Prime", owned=2)).ids.label.text)
         print("===")
         print(DbItemListing(db.Item(name="Component Zero Prime", owned=0)).ids.label.text)
