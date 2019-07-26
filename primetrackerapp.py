@@ -271,7 +271,7 @@ class DbEntryList (BoxLayout):
         self.add_widget(Widget())
         return item_listing
 
-class ItemListTab (TabbedPanelItem):
+class DbEntryListTab (TabbedPanelItem):
     '''TODO'''
     def add_listing (self, item):
         self.ids.item_list.add_listing(item)
@@ -291,7 +291,7 @@ class ProductView (ItemView):
     def __init__ (self, product, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ids.heading.item_name = product.name
-        self.ids.component_tab = ItemListTab(text = "Components")
+        self.ids.component_tab = DbEntryListTab(text = "Components")
         self.ids.sublist_tabs.add_widget(self.ids.component_tab)
         self.ids.sublist_tabs.default_tab = self.ids.component_tab
         for component in product.needs:
@@ -304,14 +304,14 @@ class ComponentView (ItemView):
         self.ids.heading.item_name = component.name
 
         # Create and Populate Relics Tab #
-        self.ids.relic_tab = ItemListTab(text = "Relics")
+        self.ids.relic_tab = DbEntryListTab(text = "Relics")
         self.ids.sublist_tabs.add_widget(self.ids.relic_tab)
         for containment in component.containments:
             # TODO rework once Containment listing classes are done
             self.ids.relic_tab.add_listing(containment.inside)
 
         # Create and Populate Products Tab #
-        self.ids.product_tab = ItemListTab(text = "Products")
+        self.ids.product_tab = DbEntryListTab(text = "Products")
         self.ids.sublist_tabs.add_widget(self.ids.product_tab)
         for product in component.builds:
             self.ids.product_tab.add_listing(product)
@@ -324,7 +324,7 @@ class RelicView (ItemView):
         self.ids.heading.item_name = relic.name
 
         # Create and Populate Contents Tab #
-        self.ids.contents_tab = ItemListTab(text = "Contents")
+        self.ids.contents_tab = DbEntryListTab(text = "Contents")
         self.ids.sublist_tabs.add_widget(self.ids.contents_tab)
         for containment in relic.containments.order_by(db.Containment.rarity):
             # TODO rework once Containment listing classes are done
