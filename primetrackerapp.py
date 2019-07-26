@@ -324,6 +324,8 @@ class RelicView (ItemView):
         # Create and Populate Contents Tab #
         self.ids.contents_tab = ItemListTab(text = "Contents")
         self.ids.sublist_tabs.add_widget(self.ids.contents_tab)
+        for containment in relic.containments: # TODO rework once Containment listing classes are done
+            self.ids.contents_tab.add_listing(containment.contains)
 
 class TestingMenu (BoxLayout):
     def _test_item_view (self):
