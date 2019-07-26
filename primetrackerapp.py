@@ -360,10 +360,9 @@ class TestingMenu (BoxLayout):
         self.add_widget(RelicView(db.Relic.select()[0]))
 
     def _test_DbItemEntry_subclasses (self):
-        print("= DbItemListing for Product =")
-        print(DbItemListing(db.Item.select_all_products()[0]).ids.label.text)
-        print("= DbItemListing for Component =")
-        print(DbItemListing(db.Item.select_all_components()[0]).ids.label.text)
+        print(DbItemListing(db.Item(name="Product Two Prime", owned=2)).ids.label.text)
+        print("===")
+        print(DbItemListing(db.Item(name="Component Zero Prime", owned=0)).ids.label.text)
 
 def main ():
     PrimeTrackerApp().run()
