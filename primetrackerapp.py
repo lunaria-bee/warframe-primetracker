@@ -305,7 +305,8 @@ class ComponentView (ItemView):
         # Create and Populate Relics Tab #
         self.ids.relic_tab = ItemListTab(text = "Relics")
         self.ids.sublist_tabs.add_widget(self.ids.relic_tab)
-        # TODO populate with containments
+        for containment in component.containments: # TODO rework once Containment listing classes are done
+            self.ids.relic_tab.add_listing(containment.inside)
 
         # Create and Populate Products Tab #
         self.ids.product_tab = ItemListTab(text = "Products")
