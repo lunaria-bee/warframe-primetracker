@@ -320,12 +320,10 @@ class RelicView (ItemView):
     def __init__ (self, relic, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ids.heading.item_name = relic.name
-        for containment in relic.containments.order_by(db.Containment.rarity):
-            self.add_sublist_item(containment)
 
-    def add_sublist_item (self, containment):
-        item_listing = super().add_sublist_item(containment.contains)
-        item_listing.item_name += "\n{}".format(containment.rarity)
+        # Create and Populate Contents Tab #
+        self.ids.contents_tab = ItemListTab(text = "Contents")
+        self.ids.sublist_tabs.add_widget(self.ids.contents_tab)
 
 class TestingMenu (BoxLayout):
     def _test_item_view (self):
