@@ -324,7 +324,8 @@ class RelicView (ItemView):
         # Create and Populate Contents Tab #
         self.ids.contents_tab = ItemListTab(text = "Contents")
         self.ids.sublist_tabs.add_widget(self.ids.contents_tab)
-        for containment in relic.containments: # TODO rework once Containment listing classes are done
+        for containment in relic.containments.order_by(db.Containment.rarity):
+            # TODO rework once Containment listing classes are done
             self.ids.contents_tab.add_listing(containment.contains)
         self.ids.sublist_tabs.default_tab = self.ids.contents_tab
 
