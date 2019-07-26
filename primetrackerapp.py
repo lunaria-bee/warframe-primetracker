@@ -276,17 +276,17 @@ class DbEntryListTab (TabbedPanelItem):
     def add_listing (self, item):
         self.ids.item_list.add_listing(item)
 
-class ItemView (BoxLayout):
+class DbEntryDetailView (BoxLayout):
     '''Shows detailed information about a database entry
 
-    An ItemView consists primarily of DbEntryListings, with a prominently
+    An DbEntryDetailView consists primarily of DbEntryListings, with a prominently
     displayed head listing for the displayed Item, and a sublist for related
     items.
 
     '''
     item_count = NumericProperty(1)
 
-class ProductView (ItemView):
+class ProductView (DbEntryDetailView):
     '''Shows information about a product (e.g. a built prime)'''
     def __init__ (self, product, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -297,7 +297,7 @@ class ProductView (ItemView):
         for component in product.needs:
             self.ids.component_tab.add_listing(component)
 
-class ComponentView (ItemView):
+class ComponentView (DbEntryDetailView):
     '''Shows information about a component (e.g. a prime part)'''
     def __init__ (self, component, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -317,7 +317,7 @@ class ComponentView (ItemView):
             self.ids.product_tab.add_listing(product)
         self.ids.sublist_tabs.default_tab = self.ids.product_tab
 
-class RelicView (ItemView):
+class RelicView (DbEntryDetailView):
     '''Shows information about a relic'''
     def __init__ (self, relic, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -333,7 +333,7 @@ class RelicView (ItemView):
 
 class TestingMenu (BoxLayout):
     def _test_item_view (self):
-        item_view = ItemView()
+        item_view = DbEntryDetailView()
         item_view.add_sublist_item(db.Item.get(name='Volt Prime'))
         self.clear_widgets()
         self.add_widget(item_view)
