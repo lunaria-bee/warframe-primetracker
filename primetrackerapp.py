@@ -256,7 +256,7 @@ class InventoryInitPopup (Popup):
         self.current_part = self.parts.pop(0)
         self.prime_prompt.text = "Enter number of {} in inventory:".format(self.current_part.name)
 
-class ItemListing (BoxLayout):
+class DbEntryListing (BoxLayout):
     '''Image, name and information about an database entry'''
     image_path = StringProperty()
     item_name = StringProperty()
@@ -266,7 +266,7 @@ class ItemList (BoxLayout):
     def add_listing (self, item):
         '''TODO'''
         self.remove_widget(self.children[0])
-        item_listing = ItemListing(item_name = item.name, size_hint_max_y = 128)
+        item_listing = DbEntryListing(item_name = item.name, size_hint_max_y = 128)
         self.add_widget(item_listing)
         self.add_widget(Widget())
         return item_listing
@@ -279,8 +279,9 @@ class ItemListTab (TabbedPanelItem):
 class ItemView (BoxLayout):
     '''Shows detailed information about a database entry
 
-    An ItemView consists primarily of ItemListings, with a prominently displayed
-    head listing for the displayed Item, and a sublist for related items.
+    An ItemView consists primarily of DbEntryListings, with a prominently
+    displayed head listing for the displayed Item, and a sublist for related
+    items.
 
     '''
     item_count = NumericProperty(1)
