@@ -374,9 +374,25 @@ class TestingMenu (BoxLayout):
         print("===")
         print(DbItemListing(db.Item(name="Component Zero Prime", owned=0)).ids.label.text)
         print("===")
+        print("Attempt to generate error...")
+        try:
+            DbItemListing(db.ItemType())
+            print("...failure! DbItemListing failed to reject incorrect type.")
+        except TypeError as e:
+            print(e)
+            print("...success!")
+        print("===")
         print(DbRelicListing(db.Relic(tier=db.RelicTier(name="Texi", ordinal=5),
                                       code="T0", vaulted = False))
               .ids.label.text)
+        print("===")
+        print("Attempt to generate error...")
+        try:
+            DbRelicListing(db.ItemType())
+            print("...failure! DbRelicListing failed to reject incorrect type.")
+        except TypeError as e:
+            print(e)
+            print("...success!")
 
 def main ():
     PrimeTrackerApp().run()
