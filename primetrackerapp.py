@@ -271,6 +271,15 @@ class DbItemListing (DbEntryListing):
                             .format(type(item)))
         super().__init__(entry=item, **kwargs)
 
+class DbRelicListing (DbEntryListing):
+    def __init__ (self, relic, **kwargs):
+        # Check Type #
+        if not isinstance(relic, db.Relic):
+            Logger.error("GUI: Tried to create DbRelicListing from {}".format(repr(relic)))
+            raise TypeError("Entry for DbRelicListing must be an instance of Relic, not {}"
+                            .format(type(relic)))
+        super().__init__(entry=relic, **kwargs)
+
 class DbEntryList (BoxLayout):
     '''TODO'''
     def add_listing (self, item):
