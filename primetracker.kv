@@ -110,6 +110,9 @@
         halign: 'left'
         text: root.text
 
+<DbItemListing>:
+    text: "{}\nOwned: {}".format(self.entry.name, self.entry.owned)
+
 <DbEntryList>:
     orientation: 'vertical'
     Widget:
