@@ -329,7 +329,7 @@ class ProductView (DbEntryDetailView):
     '''Shows information about a product (e.g. a built prime)'''
     def __init__ (self, product, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ids.heading.item_name = product.name
+        self.ids.heading.entry = product
         self.ids.component_tab = DbEntryListTab(text = "Components")
         self.ids.sublist_tabs.add_widget(self.ids.component_tab)
         self.ids.sublist_tabs.default_tab = self.ids.component_tab
