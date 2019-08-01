@@ -346,7 +346,6 @@ class ComponentView (DbEntryDetailView):
         self.ids.relic_tab = DbEntryListTab(text = "Relics")
         self.ids.sublist_tabs.add_widget(self.ids.relic_tab)
         for containment in component.containments:
-            # TODO rework once Containment listing classes are done
             self.ids.relic_tab.add(DbContainmentForRelicListing(containment))
 
         # Create and Populate Products Tab #
@@ -366,7 +365,6 @@ class RelicView (DbEntryDetailView):
         self.ids.contents_tab = DbEntryListTab(text = "Contents")
         self.ids.sublist_tabs.add_widget(self.ids.contents_tab)
         for containment in relic.containments.order_by(db.Containment.rarity):
-            # TODO rework once Containment listing classes are done
             self.ids.contents_tab.add(DbContainmentForContentsListing(containment))
         self.ids.sublist_tabs.default_tab = self.ids.contents_tab
 
