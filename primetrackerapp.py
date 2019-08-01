@@ -296,13 +296,19 @@ class DbContainmentForRelicListing (DbContainmentListing):
 
 class DbEntryList (BoxLayout):
     '''TODO'''
-    def add_listing (self, item):
+    def add (self, listing):
         '''TODO'''
+        # Check Type #
+        if not isinstance(listing, DbEntryListing):
+            Logger.error("GUI: Tried to add {} to DbEntryList"
+                         .format(listing))
+            raise TypeError("Argument to DbEntryList.add must be an instance of DbEntryListing, not {}"
+                            .format(type(listing).__name__))
+
         self.remove_widget(self.children[0])
-        item_listing = DbEntryListing(item_name = item.name, size_hint_max_y = 128)
         self.add_widget(item_listing)
         self.add_widget(Widget())
-        return item_listing
+        return listing # TODO remove once no longer required
 
 class DbEntryListTab (TabbedPanelItem):
     '''TODO'''
