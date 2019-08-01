@@ -312,8 +312,8 @@ class DbEntryList (BoxLayout):
 
 class DbEntryListTab (TabbedPanelItem):
     '''TODO'''
-    def add_listing (self, item):
-        self.ids.item_list.add_listing(item)
+    def add (self, item):
+        self.ids.item_list.add(item)
 
 class DbEntryDetailView (BoxLayout):
     '''Shows detailed information about a database entry
