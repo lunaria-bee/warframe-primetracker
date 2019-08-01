@@ -100,7 +100,7 @@
 
 <DbEntryListing>:
     orientation: 'horizontal'
-    text: self.entry.name
+    text: "".format(self.entry)
     Image:
         id: image
         size_hint_y: 1
@@ -111,7 +111,7 @@
         text: root.text
 
 <DbItemListing>:
-    text: "{}\nOwned: {}".format(self.entry.name, self.entry.owned)
+    text: "{}\nOwned: {}".format(self.entry, self.entry.owned)
 
 <DbEntryList>:
     orientation: 'vertical'
