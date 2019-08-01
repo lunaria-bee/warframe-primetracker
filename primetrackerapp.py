@@ -262,23 +262,26 @@ class DbEntryListing (BoxLayout):
     entry = ObjectProperty()
     text = StringProperty()
 
+    def __init__ (self, type_filter=None, **kwargs):
+        # Check Type #
+        if not type_filter is None\
+           and 'entry' in kwargs.keys()\
+           and not isinstance(kwargs['entry'], type_filter):
+            Logger.error("GUI: Tried to create {} from {}"
+                         .format(type(self).__name__, repr(kwargs['entry'])))
+            raise TypeError("Argument to {} must be an instance of {}, not {}"
+                            .format(type(self).__name__, type_filter, type(kwargs['entry'])))
+
+        # if type check passes, proceed through MRO
+        super().__init__(**kwargs)
+
 class DbItemListing (DbEntryListing):
     def __init__ (self, item, **kwargs):
-        # Check Type #
-        if not isinstance(item, db.Item):
-            Logger.error("GUI: Tried to create DbItemListing from {}".format(repr(item)))
-            raise TypeError("Entry for to DbItemListing must be an instance of Item, not {}"
-                            .format(type(item)))
-        super().__init__(entry=item, **kwargs)
+        super().__init__(entry=item, type_filter=db.Item, **kwargs)
 
 class DbRelicListing (DbEntryListing):
     def __init__ (self, relic, **kwargs):
-        # Check Type #
-        if not isinstance(relic, db.Relic):
-            Logger.error("GUI: Tried to create DbRelicListing from {}".format(repr(relic)))
-            raise TypeError("Entry for DbRelicListing must be an instance of Relic, not {}"
-                            .format(type(relic)))
-        super().__init__(entry=relic, **kwargs)
+        super().__init__(entry=relic, type_filter=db.Relic, **kwargs)
 
 class DbEntryList (BoxLayout):
     '''TODO'''
