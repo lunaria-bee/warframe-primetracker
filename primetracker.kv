@@ -100,6 +100,7 @@
 
 <DbEntryListing>:
     orientation: 'horizontal'
+    text: self.entry.name
     Image:
         id: image
         size_hint_y: 1
@@ -107,7 +108,7 @@
     Label:
         id: label
         halign: 'left'
-        text: root.entry.name
+        text: root.text
 
 <DbEntryList>:
     orientation: 'vertical'

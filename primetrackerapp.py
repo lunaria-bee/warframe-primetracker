@@ -260,6 +260,7 @@ class DbEntryListing (BoxLayout):
     '''Image, name and information about an database entry'''
     image_path = StringProperty()
     entry = ObjectProperty()
+    text = StringProperty()
 
 class DbItemListing (DbEntryListing):
     def __init__ (self, item, **kwargs):
