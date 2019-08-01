@@ -416,6 +416,10 @@ class TestingMenu (BoxLayout):
         except TypeError as e:
             print(e)
             print("...success!")
+        print("===")
+        print(DbContainmentAsRelicListing(test_containment_low))
+        # print("===")
+        # print(DbContainmentAsRelicListing(test_containment_high))
 
 def main ():
     PrimeTrackerApp().run()
