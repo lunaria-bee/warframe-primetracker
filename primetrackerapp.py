@@ -360,14 +360,14 @@ class RelicView (DbEntryDetailView):
     '''Shows information about a relic'''
     def __init__ (self, relic, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ids.heading.item_name = relic.name
+        self.ids.heading.entry = relic
 
         # Create and Populate Contents Tab #
         self.ids.contents_tab = DbEntryListTab(text = "Contents")
         self.ids.sublist_tabs.add_widget(self.ids.contents_tab)
         for containment in relic.containments.order_by(db.Containment.rarity):
             # TODO rework once Containment listing classes are done
-            self.ids.contents_tab.add_listing(containment.contains)
+            self.ids.contents_tab.add(DbContainmentForContentsListing(containment))
         self.ids.sublist_tabs.default_tab = self.ids.contents_tab
 
 class TestingMenu (BoxLayout):
