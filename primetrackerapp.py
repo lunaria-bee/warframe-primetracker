@@ -288,6 +288,12 @@ class DbContainmentListing (DbEntryListing):
         super().__init__(entry=containment,
                          type_filter=db.Containment, **kwargs)
 
+class DbContainmentForContentsListing (DbContainmentListing):
+    pass
+
+class DbContainmentForRelicListing (DbContainmentListing):
+    pass
+
 class DbEntryList (BoxLayout):
     '''TODO'''
     def add_listing (self, item):
