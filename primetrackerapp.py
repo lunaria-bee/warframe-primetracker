@@ -369,6 +369,8 @@ class RelicView (DbEntryDetailView):
         self.ids.sublist_tabs.default_tab = self.ids.contents_tab
 
 class TestingMenu (BoxLayout):
+    # TODO TestingMenu should be restorable after a test
+
     def _test_item_view (self):
         item_view = DbEntryDetailView()
         item_view.add_sublist_item(db.Item.get(name='Volt Prime'))
