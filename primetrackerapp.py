@@ -340,20 +340,20 @@ class ComponentView (DbEntryDetailView):
     '''Shows information about a component (e.g. a prime part)'''
     def __init__ (self, component, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ids.heading.item_name = component.name
+        self.ids.heading.entry = component
 
         # Create and Populate Relics Tab #
         self.ids.relic_tab = DbEntryListTab(text = "Relics")
         self.ids.sublist_tabs.add_widget(self.ids.relic_tab)
         for containment in component.containments:
             # TODO rework once Containment listing classes are done
-            self.ids.relic_tab.add_listing(containment.inside)
+            self.ids.relic_tab.add(DbContainmentForRelicListing(containment))
 
         # Create and Populate Products Tab #
         self.ids.product_tab = DbEntryListTab(text = "Products")
         self.ids.sublist_tabs.add_widget(self.ids.product_tab)
         for product in component.builds:
-            self.ids.product_tab.add_listing(product)
+            self.ids.product_tab.add(DbItemListing(product))
         self.ids.sublist_tabs.default_tab = self.ids.product_tab
 
 class RelicView (DbEntryDetailView):
