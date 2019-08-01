@@ -113,6 +113,12 @@
 <DbItemListing>:
     text: "{}\nOwned: {}".format(self.entry, self.entry.owned)
 
+<DbContainmentForContentsListing>:
+    text: "{} | Rarity: {}".format(self.entry.contains, self.entry.rarity)
+
+<DbContainmentForRelicListing>:
+    text: "{} | Rarity: {}".format(self.entry.inside, self.entry.rarity)
+
 <DbEntryList>:
     orientation: 'vertical'
     Widget:
