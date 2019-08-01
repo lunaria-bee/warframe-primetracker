@@ -306,7 +306,7 @@ class DbEntryList (BoxLayout):
                             .format(type(listing).__name__))
 
         self.remove_widget(self.children[0])
-        self.add_widget(item_listing)
+        self.add_widget(listing)
         self.add_widget(Widget())
         return listing # TODO remove once no longer required
 
