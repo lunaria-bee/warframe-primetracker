@@ -370,9 +370,32 @@ class TestingMenu (BoxLayout):
         self.add_widget(RelicView(db.Relic.select()[0]))
 
     def _test_DbEntryListing_subclasses (self):
-        print(DbItemListing(db.Item(name="Product Two Prime", owned=2)).ids.label.text)
+        # Create Dummy DB Entries #
+        test_product = db.Item(name="Product Two Prime", owned=2)
+        test_component = db.Item(name="Component Zero Prime", owned=0)
+        test_relic_tier_low = db.RelicTier(name="TestLow", ordinal=5)
+        test_relic_tier_high = db.RelicTier(name="TestHigh", ordinal=6)
+        test_relic_low = db.Relic(tier=test_relic_tier_low,
+                                  code="T5", vaulted=True)
+        test_relic_high = db.Relic(tier=test_relic_tier_high,
+                                   code="T6", vaulted=False)
+        test_rarity_common = db.Rarity(name="Common", ordinal=-1)
+        test_rarity_rare = db.Rarity(name="Rare", ordinal=1)
+        test_build_requirement = db.BuildRequirement(needs=test_component,
+                                                     builds=test_product,
+                                                     need_count=2,
+                                                     build_count=1)
+        test_containment_low = db.Containment(inside=test_relic_low,
+                                              contains=test_component,
+                                              rarity=test_rarity_rare)
+        test_containment_high = db.Containment(inside=test_relic_high,
+                                               contains=test_component,
+                                               rarity=test_rarity_common)
+
+        # Run Tests #
+        print(DbItemListing(test_product).ids.label.text)
         print("===")
-        print(DbItemListing(db.Item(name="Component Zero Prime", owned=0)).ids.label.text)
+        print(DbItemListing(test_component).ids.label.text)
         print("===")
         print("Attempt to generate error...")
         try:
@@ -382,9 +405,9 @@ class TestingMenu (BoxLayout):
             print(e)
             print("...success!")
         print("===")
-        print(DbRelicListing(db.Relic(tier=db.RelicTier(name="Texi", ordinal=5),
-                                      code="T0", vaulted = False))
-              .ids.label.text)
+        print(DbRelicListing(test_relic_low).ids.label.text)
+        print("===")
+        print(DbRelicListing(test_relic_high).ids.label.text)
         print("===")
         print("Attempt to generate error...")
         try:
