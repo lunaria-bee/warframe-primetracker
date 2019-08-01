@@ -366,7 +366,8 @@ class TestingMenu (BoxLayout):
         print(DbItemListing(db.Item(name="Component Zero Prime", owned=0)).ids.label.text)
         print("===")
         print(DbRelicListing(db.Relic(tier=db.RelicTier(name="Texi", ordinal=5),
-                                      code="T0", vaulted = False)))
+                                      code="T0", vaulted = False))
+              .ids.label.text)
 
 def main ():
     PrimeTrackerApp().run()
