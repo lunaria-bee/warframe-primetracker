@@ -431,9 +431,9 @@ class TestingMenu (BoxLayout):
             print(e)
             print("...success!")
         print("===")
-        print(DbContainmentAsRelicListing(test_containment_low))
-        # print("===")
-        # print(DbContainmentAsRelicListing(test_containment_high))
+        print(DbContainmentForRelicListing(test_containment_low))
+        print("===")
+        print(DbContainmentForRelicListing(test_containment_high))
 
 def main ():
     PrimeTrackerApp().run()
