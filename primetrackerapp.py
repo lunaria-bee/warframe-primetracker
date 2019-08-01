@@ -289,10 +289,10 @@ class DbContainmentListing (DbEntryListing):
                          type_filter=db.Containment, **kwargs)
 
 class DbContainmentForContentsListing (DbContainmentListing):
-    pass
+    pass # see primetracker.kv
 
 class DbContainmentForRelicListing (DbContainmentListing):
-    pass
+    pass # see primetracker.kv
 
 class DbEntryList (BoxLayout):
     '''TODO'''
