@@ -283,6 +283,11 @@ class DbRelicListing (DbEntryListing):
     def __init__ (self, relic, **kwargs):
         super().__init__(entry=relic, type_filter=db.Relic, **kwargs)
 
+class DbContainmentListing (DbEntryListing):
+    def __init__ (self, containment, **kwargs):
+        super().__init__(entry=containment,
+                         type_filter=db.Containment, **kwargs)
+
 class DbEntryList (BoxLayout):
     '''TODO'''
     def add_listing (self, item):
