@@ -371,12 +371,6 @@ class RelicView (DbEntryDetailView):
 class TestingMenu (BoxLayout):
     # TODO TestingMenu should be restorable after a test
 
-    def _test_item_view (self):
-        item_view = DbEntryDetailView()
-        item_view.add_sublist_item(db.Item.get(name='Volt Prime'))
-        self.clear_widgets()
-        self.add_widget(item_view)
-
     def _test_product_view (self, product_name):
         self.clear_widgets()
         self.add_widget(ProductView(db.Item.get(name=product_name)))
