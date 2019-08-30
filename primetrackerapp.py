@@ -372,6 +372,8 @@ class RelicView (DbEntryDetailView):
 
 class MainNavigator (BoxLayout):
     '''TODO'''
+
+    # TODO method to set current widget #
     pass
 
 class TestingMenu (BoxLayout):
