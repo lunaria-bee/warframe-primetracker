@@ -138,6 +138,19 @@
         tab_pos: 'left_top'
         # do_default_tab: False
 
+<MainNavigator>:
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'horizontal'
+        height: 36
+        Button:
+            text: '←'
+            width: self.height
+        Button:
+            text: 'o'
+            width: self.height
+    Widget:
+
 <TestHeading@Label>:
     size_hint_max_y: 36
 

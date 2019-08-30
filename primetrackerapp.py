@@ -370,6 +370,10 @@ class RelicView (DbEntryDetailView):
             self.ids.contents_tab.add(DbContainmentForContentsListing(containment))
         self.ids.sublist_tabs.default_tab = self.ids.contents_tab
 
+class MainNavigator (BoxLayout):
+    '''TODO'''
+    pass
+
 class TestingMenu (BoxLayout):
     # TODO TestingMenu should be restorable after a test
 
