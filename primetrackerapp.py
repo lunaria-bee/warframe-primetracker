@@ -21,7 +21,9 @@ from kivy.logger import Logger
 
 class PrimeTrackerApp (App):
     def build (self):
-        return TestingMenu()
+        root = BoxLayout(orientation='vertical')
+        root.add_widget(TestingMenu())
+        return root
 
 class TestingButton (Button):
     '''A button ideal for testing new features'''
