@@ -447,6 +447,8 @@ class TestingMenu (BoxLayout):
         print("===")
 
 def main ():
+    db.open_()
     PrimeTrackerApp().run()
+    db.close()
 
 if __name__ == '__main__': main()
