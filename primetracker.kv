@@ -84,7 +84,7 @@
     BoxLayout:
         id: layout
         orientation: 'horizontal'
-        # Image:
+        # Image: # TODO
         #     size_hint_x: None
         #     width: self.height
         Label:
@@ -98,8 +98,53 @@
                 id: spin_counter
                 pos_hint: {'right': 1, 'center_y': 0.5}
 
+<DbEntryListing>:
+    orientation: 'horizontal'
+    text: "{}".format(self.entry)
+    Image:
+        id: image
+        size_hint_y: 1
+        width: self.height
+    Label:
+        id: label
+        halign: 'left'
+        text: root.text
+
+# TODO add Kivy color/formatting tags to entry text
+<DbItemListing>:
+    text: "{}\nOwned: {}".format(self.entry, self.entry.owned)
+
+<DbContainmentForContentsListing>:
+    text: "{} | Rarity: {}".format(self.entry.contains, self.entry.rarity)
+
+<DbContainmentForRelicListing>:
+    text: "{} | Rarity: {}".format(self.entry.inside, self.entry.rarity)
+
+<DbEntryList>:
+    orientation: 'vertical'
+    Widget:
+
+<DbEntryListTab>:
+    DbEntryList:
+        id: item_list
+
+<DbEntryDetailView>:
+    orientation: 'vertical'
+    DbEntryListing:
+        id: heading
+        size_hint_max_y: 156
+    TabbedPanel:
+        id: sublist_tabs
+        tab_pos: 'left_top'
+        # do_default_tab: False
+
+<TestHeading@Label>:
+    size_hint_max_y: 36
+
 <TestingMenu>:
     orientation: 'vertical'
+    TestHeading:
+        text: "SETUP TESTS"
     BoxLayout:
         orientation: 'horizontal'
         TestingButton:
@@ -108,14 +153,26 @@
         TestingButton:
             text: "Initialize Inventory"
             on_release: Factory.InventoryInitPopup().open()
+    TestHeading:
+        text: "SEARCH AND VIEW TESTS"
     BoxLayout:
         orientation: 'horizontal'
         TestingButton:
             text: "Show Product"
+            on_release: root._test_product_view('Volt Prime')
         TestingButton:
             text: "Show Component"
+            on_release: root._test_component_view('Volt Prime Chassis Blueprint')
         TestingButton:
             text: "Show Relic"
+            on_release: root._test_relic_view()
+    TestHeading:
+        text: "UNIT TESTS"
+    BoxLayout:
+        orientation: 'horizontal'
+        TestingButton:
+            text: "DbEntryListing"
+            on_release: root._test_DbEntryListing_subclasses()
     Button:
         text: "Close App"
         on_release: app.stop()
