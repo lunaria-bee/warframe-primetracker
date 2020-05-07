@@ -164,6 +164,8 @@ class TestingMenu (BoxLayout):
     pass
 
 def main ():
+    db.open_()
     PrimeTrackerApp().run()
+    db.close()
 
 if __name__ == '__main__': main()
