@@ -1,9 +1,11 @@
 # Emacs backup files
 *~
 
+# Other backup files
+*.bkp
+
 # SQLite DB files
 *.sqlite
-*.bkp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

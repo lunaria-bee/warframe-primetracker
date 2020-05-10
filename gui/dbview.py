@@ -1,14 +1,15 @@
-import primedb as db
+import db.primedb as db
 
-import kivy
 from kivy.lang.builder import Builder
-from kivy.properties import *
+from kivy.logger import Logger
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.tabbedpanel import TabbedPanelItem
 from kivy.uix.widget import Widget
 
+from kivy.properties import *
 
-Builder.load_file('guilib/dbview.kv')
+
+Builder.load_file('gui/dbview.kv')
 
 
 class DbEntryListing (BoxLayout):
@@ -22,7 +23,7 @@ class DbEntryListing (BoxLayout):
         if not type_filter is None\
            and 'entry' in kwargs.keys()\
            and not isinstance(kwargs['entry'], type_filter):
-            Logger.error("GUI: Tried to create {} from {}"
+            Logger.error("GUI-DbEntry: Tried to create {} from {}"
                          .format(type(self).__name__, repr(kwargs['entry'])))
             raise TypeError("Argument to {} must be an instance of {}, not {}"
                             .format(type(self).__name__, type_filter, type(kwargs['entry'])))
@@ -61,7 +62,7 @@ class DbEntryList (BoxLayout):
         '''TODO'''
         # Check Type #
         if not isinstance(listing, DbEntryListing):
-            Logger.error("GUI: Tried to add {} to DbEntryList"
+            Logger.error("GUI-DbEntry: Tried to add {} to DbEntryList"
                          .format(listing))
             raise TypeError("Argument to DbEntryList.add must be an instance of DbEntryListing, not {}"
                             .format(type(listing).__name__))

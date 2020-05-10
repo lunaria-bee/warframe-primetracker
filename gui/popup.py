@@ -1,5 +1,5 @@
 import certifi, urllib3
-import primedb as db
+import db.primedb as db
 
 from functools import partial
 from threading import Thread
@@ -11,7 +11,7 @@ from kivy.uix.popup import Popup
 from kivy.properties import *
 
 
-Builder.load_file('guilib/popup.kv')
+Builder.load_file('gui/popup.kv')
 
 
 class ProgressPopup (Popup):

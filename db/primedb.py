@@ -5,7 +5,7 @@ from kivy.logger import Logger
 
 # TODO rework population functions to work with existing database
 
-DB_PATH = 'primedb.sqlite'
+DB_PATH = 'primdb.sqlite'
 WIKI_HOME = 'http://warframe.fandom.com'
 
 _primedb = SqliteDatabase(DB_PATH)

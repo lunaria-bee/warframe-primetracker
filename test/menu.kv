@@ -1,21 +1,17 @@
+#:import test test
 #:import Factory kivy.factory.Factory
-
-# <ProgressPopup>:
-#     bar: bar
-#     on_open: self.start()
-#     ProgressBar:
-#         id: bar
-
-# TODO set max and min height for popups
 
 <TestingButton>:
     test: "Testing Button"
 
-<TestHeading@Label>:
+
+<TestHeading>:
     size_hint_max_y: 36
+
 
 <TestingMenu>:
     orientation: 'vertical'
+
     TestHeading:
         text: "SETUP TESTS"
     BoxLayout:
@@ -26,26 +22,29 @@
         TestingButton:
             text: "Initialize Inventory"
             on_release: Factory.InventoryInitPopup().open()
+
     TestHeading:
         text: "SEARCH AND VIEW TESTS"
     BoxLayout:
         orientation: 'horizontal'
         TestingButton:
             text: "Show Product"
-            on_release: root._test_product_view('Volt Prime')
+            on_release: test.gui.test_product_view('Volt Prime', root)
         TestingButton:
             text: "Show Component"
-            on_release: root._test_component_view('Volt Prime Chassis Blueprint')
+            on_release: test.gui.test_component_view('Volt Prime Chassis Blueprint', root)
         TestingButton:
             text: "Show Relic"
-            on_release: root._test_relic_view()
+            on_release: test.gui.test_relic_view(root)
+
     TestHeading:
         text: "UNIT TESTS"
     BoxLayout:
         orientation: 'horizontal'
         TestingButton:
             text: "DbEntryListing"
-            on_release: root._test_DbEntryListing_subclasses()
+            on_release: test.gui.test_DbEntryListing_subclasses()
+
     Button:
         text: "Close App"
         on_release: app.stop()

@@ -7,7 +7,7 @@ from kivy.uix.textinput import TextInput
 from kivy.properties import *
 
 
-Builder.load_file('guilib/input.kv')
+Builder.load_file('gui/input.kv')
 
 
 class DynamicTextInput (TextInput):
