@@ -1,0 +1,46 @@
+<DbEntryListing>:
+    orientation: 'horizontal'
+    text: "{}".format(self.entry)
+    Image:
+        id: image
+        size_hint_y: 1
+        width: self.height
+    Label:
+        id: label
+        halign: 'left'
+        text: root.text
+
+<DbItemListing>:
+    text: "{}\nOwned: {}".format(self.entry, self.entry.owned)
+
+<DbRelicListing>:
+
+<DbContainmentForContentsListing>:
+    text: "{} | Rarity: {}".format(self.entry.contains, self.entry.rarity)
+
+<DbContainmentForRelicListing>:
+    text: "{} | Rarity: {}".format(self.entry.inside, self.entry.rarity)
+
+<DbEntryList>:
+    orientation: 'vertical'
+    Widget:
+
+<DbEntryListTab>:
+    DbEntryList:
+        id: item_list
+
+<DbEntryDetailView>:
+    orientation: 'vertical'
+    DbEntryListing:
+        id: heading
+        size_hint_max_y: 156
+    TabbedPanel:
+        id: sublist_tabs
+        tab_pos: 'left_top'
+        # do_default_tab: False
+
+<ProductView>:
+
+<ComponentView>:
+
+<RelicView>:

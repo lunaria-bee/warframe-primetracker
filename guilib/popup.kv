@@ -1,0 +1,49 @@
+<ProgressPopup>:
+    bar: bar
+    phase_info: phase_info
+    step_info: step_info
+    FloatLayout:
+        Label:
+            id: phase_info
+            pos_hint: {'center_x': 0.5, 'center_y': 0.75}
+            valign: 'center'
+        ProgressBar:
+            id: bar
+            pos_hint: {'center_x': 0.5, 'center_y': .5}
+            size_hint: 0.9, 1
+        Label:
+            id: step_info
+            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+            valign: 'center'
+
+<DbPopulatePopup>:
+    title: "Populating Database"
+    on_open: self.start()
+    size_hint_x: 0.8
+    size_hint_y: None
+    height: 200
+
+<InventoryInitPopup>:
+    title: "Initializing Inventory"
+    size_hint_x: 0.8
+    size_hint_y: None
+    height: self.width * 0.3
+    on_open: self.parts_init()
+    prime_prompt: prime_prompt
+    spin_counter: spin_counter
+    BoxLayout:
+        id: layout
+        orientation: 'horizontal'
+        # Image: # TODO
+        #     size_hint_x: None
+        #     width: self.height
+        Label:
+            id: prime_prompt
+            halign: 'left'
+            valign: 'center'
+            padding: (15, 15)
+            text_size: self.size
+        FloatLayout:
+            SpinCounter:
+                id: spin_counter
+                pos_hint: {'right': 1, 'center_y': 0.5}
