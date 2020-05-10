@@ -1,4 +1,3 @@
-import kivy
 from kivy.clock import Clock
 from kivy.lang.builder import Builder
 from kivy.logger import Logger

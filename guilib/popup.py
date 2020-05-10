@@ -1,8 +1,18 @@
+import certifi, urllib3
+import primedb as db
+
+from functools import partial
+from threading import Thread
+
 from kivy.clock import Clock
 from kivy.lang.builder import Builder
 from kivy.uix.popup import Popup
 
 from kivy.properties import *
+
+
+Builder.load_file('guilib/popup.kv')
+
 
 class ProgressPopup (Popup):
     '''Popup window to provide information about multi-step tasks
