@@ -1,5 +1,5 @@
 import db.primedb as db
-from gui.dbview import\
+from gui.dbentry import\
     ComponentView, ProductView, RelicView,\
     DbContainmentForContentsListing, DbContainmentForRelicListing, DbItemListing, DbRelicListing
 

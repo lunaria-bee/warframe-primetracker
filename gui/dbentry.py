@@ -9,7 +9,7 @@ from kivy.uix.widget import Widget
 from kivy.properties import *
 
 
-Builder.load_file('gui/dbview.kv')
+Builder.load_file('gui/dbentry.kv')
 
 
 class DbEntryListing (BoxLayout):
