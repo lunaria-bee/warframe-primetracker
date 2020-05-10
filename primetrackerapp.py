@@ -102,6 +102,7 @@ class TestingMenu (BoxLayout):
         print(DbContainmentForContentsListing(test_containment_high).ids.label.text)
         print("===")
 
+
 def main ():
     db.open_()
     PrimeTrackerApp().run()
