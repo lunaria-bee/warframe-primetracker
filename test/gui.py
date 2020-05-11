@@ -1,7 +1,12 @@
 import db.primedb as db
+
+from kivy.uix.screenmanager import SlideTransition
+
+from gui.autoscreenmanager import AutoScreenManager
 from gui.dbentry import\
     ComponentView, ProductView, RelicView,\
     DbContainmentForContentsListing, DbContainmentForRelicListing, DbItemListing, DbRelicListing
+from test.menu import AutoScreenManagerTestingMenu
 
 
 class TestDb:
@@ -29,19 +34,26 @@ class TestDb:
                                                rarity=self.rarity_common)
 
 
-def test_product_view(product_name, parent_widget):
-    parent_widget.clear_widgets()
-    parent_widget.add_widget(ProductView(db.Item.get(name=product_name)))
+def test_product_view(product_name, parent_screen_manager):
+    parent_screen_manager.switch_to_widget(ProductView(db.Item.get(name=product_name)))
 
 
-def test_component_view(component_name, parent_widget):
-    parent_widget.clear_widgets()
-    parent_widget.add_widget(ComponentView(db.Item.get(name=component_name)))
+def test_component_view(component_name, parent_screen_manager):
+    parent_screen_manager.switch_to_widget(ComponentView(db.Item.get(name=component_name)))
 
 
-def test_relic_view(parent_widget):
-    parent_widget.clear_widgets()
-    parent_widget.add_widget(RelicView(db.Relic.select()[0]))
+def test_relic_view(parent_screen_manager):
+    parent_screen_manager.switch_to_widget(RelicView(db.Relic.select()[0]))
+
+
+def test_AutoScreenManager(parent_screen_manager):
+    screen_manager = AutoScreenManager()
+    parent_screen_manager.switch_to_widget(screen_manager)
+    screen_manager.switch_to_widget(AutoScreenManagerTestingMenu())
+
+
+def test_AutoScreenManager_reverse(parent_screen_manager):
+    parent_screen_manager._keyboard.dispatch('on_key_down', (27, 'escape'), None, [])
 
 
 def test_DbEntryListing_subclasses():

@@ -29,13 +29,21 @@
         orientation: 'horizontal'
         TestingButton:
             text: "Show Product"
-            on_release: test.gui.test_product_view('Volt Prime', root)
+            on_release: test.gui.test_product_view('Volt Prime', app.root)
         TestingButton:
             text: "Show Component"
-            on_release: test.gui.test_component_view('Volt Prime Chassis Blueprint', root)
+            on_release: test.gui.test_component_view('Volt Prime Chassis Blueprint', app.root)
         TestingButton:
             text: "Show Relic"
-            on_release: test.gui.test_relic_view(root)
+            on_release: test.gui.test_relic_view(app.root)
+
+    TestHeading:
+        text: "SCREEN MANAGER TESTS"
+    BoxLayout:
+        orientation: 'horizontal'
+        TestingButton:
+            text: "Test AutoScreenManager"
+            on_release: test.gui.test_AutoScreenManager(app.root)
 
     TestHeading:
         text: "UNIT TESTS"
@@ -48,3 +56,30 @@
     Button:
         text: "Close App"
         on_release: app.stop()
+
+
+<AutoScreenManagerTestingMenu>:
+    orientation: 'vertical'
+
+    TestHeading:
+        text: "SLIDE TRANSITIONS"
+    BoxLayout:
+        orientation: 'horizontal'
+        TestingButton:
+            text: "Left"
+            on_release:
+        TestingButton:
+            text: "Right"
+            on_release:
+        TestingButton:
+            text: "Up"
+            on_release:
+        TestingButton:
+            text: "Down"
+            on_release:
+
+    TestHeading:
+        text: "REVERSE TRANSITION"
+    TestingButton:
+        text: "Reverse"
+        on_release: test.gui.test_AutoScreenManager_reverse(root.parent.parent)
