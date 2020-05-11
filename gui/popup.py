@@ -15,14 +15,14 @@ Builder.load_file('gui/popup.kv')
 
 
 class ProgressPopup (Popup):
-    '''Popup window to provide information about multi-step tasks
+    '''Popup window to provide information about multi-step tasks.
 
-    This window will show a heading about the task, a progress bar, and
-    additional information about the current step of the task.
+    This window will show a heading about the task, a progress bar, and additional
+    information about the current step of the task.
 
-    If this task is broken into multiple subtasks, hereafter called "phases,"
-    the progress bar can show which phase of the task is currently being
-    comleted, independently of other phases.
+    If this task is broken into multiple subtasks, hereafter called "phases," the progress
+    bar can show which phase of the task is currently being comleted, independently of
+    other phases.
 
     PROPERTIES
     phase_count: the total number of phases in the task
@@ -31,26 +31,35 @@ class ProgressPopup (Popup):
     step_postfix: text at the end of the information for each step
 
     '''
+
     phase_count = NumericProperty()
+    '''Total number of phases in the task.'''
+
     current_phase = NumericProperty()
+    '''Currently running phrase.'''
+
     step_prefix = StringProperty()
+    '''Text at the beginning of the information for each step'''
+
     step_postfix = StringProperty()
+    '''Text at the end of the information for each step'''
+
 
     def new_phase (self, phase_steps, phase_info,
                    step_prefix="", step_postfix=""):
-        '''Start a new phase of the task
+        '''Start a new phase of the task.
 
-        Even for single-phase tasks, this method must be used to initiate the
-        first (and only) phase.
+        Even for single-phase tasks, this method must be used to initiate the first (and
+        only) phase.
 
         Must be called asynchronously (e.g. via a Clock) for the popup to update
         correctly.
 
         PARAMETERS
-        phase_steps: the number of steps in this phase
-        phase_info: heading with information about what the task is doing
-        step_prefix: updates the step_prefix property
-        step_postfix: updates the step_postfix property
+        phase_steps: Number of steps in this phase.
+        phase_info: Heading with information about what the task is doing.
+        step_prefix: Updates the step_prefix property.
+        step_postfix: Updates the step_postfix property.
 
         '''
         self.bar.max = phase_steps
@@ -62,14 +71,13 @@ class ProgressPopup (Popup):
         self.step_postfix = step_postfix
 
     def step (self, step_info="", steps=1):
-        '''Indicate that some number of task steps have been completed
+        '''Indicate that some number of task steps have been completed.
 
-        Must be called asynchronously (e.g. via Clock) for the popup to update
-        correctly.
+        Must be called asynchronously (e.g. via Clock) for the popup to update correctly.
 
         PARAMETERS
-        step_info: information about this particular step
-        steps: the number of steps that have been completed since the last update
+        step_info: Information about this particular step.
+        steps: Number of steps that have been completed since the last update.
 
         '''
         self.bar.value += 1
@@ -79,9 +87,10 @@ class ProgressPopup (Popup):
 
 
 class DbPopulatePopup (ProgressPopup):
-    '''Populates the Prime database'''
+    '''Populates the Prime database.'''
+
     def start (self):
-        '''Initialize database population
+        '''Initialize database population.
 
         Called automatically when the popup opens.
 
@@ -90,6 +99,8 @@ class DbPopulatePopup (ProgressPopup):
         self.execution = Thread(target=partial(DbPopulatePopup.populate, self)).start()
 
     def populate (self):
+        '''Populate the database.'''
+
         # Initial Setup #
         db.population_setup()
         http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
@@ -112,9 +123,10 @@ class DbPopulatePopup (ProgressPopup):
 
 
 class InventoryInitPopup (Popup):
-    '''Initializes inventory of primes, parts, and relics'''
+    '''Initializes inventory of primes, parts, and relics.'''
+
     def parts_init (self):
-        '''Initialize inventory input
+        '''Initialize inventory input.
 
         Called automatically when the popup opens.
 
@@ -126,6 +138,7 @@ class InventoryInitPopup (Popup):
         self.next_part()
 
     def process_next (self, instance):
+        '''Process the next part in the database.'''
         if self.spin_counter.check_input():
             self.current_part.owned = int(self.spin_counter.text_input.text)
             self.current_part.save()
@@ -137,5 +150,6 @@ class InventoryInitPopup (Popup):
         self.spin_counter.focus = True
 
     def next_part (self):
+        '''Get the next part to process.'''
         self.current_part = self.parts.pop(0)
         self.prime_prompt.text = "Enter number of {} in inventory:".format(self.current_part.name)

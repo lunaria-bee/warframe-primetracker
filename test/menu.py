@@ -10,7 +10,7 @@ Builder.load_file('test/menu.kv')
 
 
 class TestingButton (Button):
-    '''A button ideal for testing new features'''
+    '''A button ideal for testing new features.'''
     def on_release (self):
         if not len(self.get_property_observers('on_release')):
             Logger.warning("UI Testing: {} Test not implemented!".format(self.text))
