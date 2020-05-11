@@ -6,14 +6,14 @@ from kivy.uix.boxlayout import BoxLayout
 from test.menu import TestingMenu
 
 
-class PrimeTrackerApp (App):
-    def build (self):
+class PrimeTrackerApp(App):
+    def build(self):
         root = BoxLayout(orientation='vertical')
         root.add_widget(TestingMenu())
         return root
 
 
-def main ():
+def main():
     db.open_()
     PrimeTrackerApp().run()
     db.close()

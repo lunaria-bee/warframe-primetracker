@@ -13,33 +13,33 @@ WIKI_HOME = 'http://warframe.fandom.com'
 _primedb = SqliteDatabase(DB_PATH)
 
 
-class BaseModel (Model):
+class BaseModel(Model):
     '''Base class for all database models.'''
     class Meta:
         database = _primedb
 
 
-class DataModel (BaseModel):
+class DataModel(BaseModel):
     '''Base model for tables that store primary information'''
 
     name = CharField()
 
-    def __str__ (self):
+    def __str__(self):
         return self.name
 
 
-class RelationModel (BaseModel):
+class RelationModel(BaseModel):
     '''Base model for tables that represent many-to-many relations'''
     pass
 
 
 # Data Tables #
-class ItemType (DataModel):
+class ItemType(DataModel):
     '''Type of an item (e.g. Prime, Prime Part, etc.).'''
     pass
 
 
-class Item (DataModel):
+class Item(DataModel):
     '''Any item obtainable from a drop'''
 
     type_ = ForeignKeyField(ItemType, backref='items')
@@ -55,25 +55,25 @@ class Item (DataModel):
     '''Currently unimplemented'''
 
     @classmethod
-    def select_all_products (cls):
+    def select_all_products(cls):
         return (cls
                 .select()
                 .join(BuildRequirement, on=BuildRequirement.builds)
                 .group_by(Item))
 
     @classmethod
-    def select_all_components (cls):
+    def select_all_components(cls):
         return (cls
                 .select()
                 .join(BuildRequirement, on=BuildRequirement.needs)
                 .group_by(Item))
 
     @property
-    def soup (self):
+    def soup(self):
         return BeautifulSoup(self.page, 'lxml')
 
     @property
-    def relics (self):
+    def relics(self):
         return (Relic
                 .select()
                 .join(Containment, on=Containment.inside)
@@ -81,35 +81,35 @@ class Item (DataModel):
                 .group_by(Relic))
 
     @property
-    def builds (self):
+    def builds(self):
         return (self.__class__
                 .select()
                 .join(BuildRequirement, on=BuildRequirement.builds)
                 .where(BuildRequirement.needs == self))
 
     @property
-    def needs (self):
+    def needs(self):
         return (self.__class__
                 .select()
                 .join(BuildRequirement, on=BuildRequirement.needs)
                 .where(BuildRequirement.builds == self))
 
     @property
-    def vaulted (self):
+    def vaulted(self):
         return all(r.vaulted for r in self.relics)
 
 
-class RelicTier (DataModel):
+class RelicTier(DataModel):
     '''Tier of a relic (e.g. Lith, Meso, etc.).'''
     ordinal = SmallIntegerField(unique=True)
 
 
-class Rarity (DataModel):
+class Rarity(DataModel):
     '''Rarity of an item dropped from a relic.'''
     ordinal = SmallIntegerField(unique=True)
 
 
-class Relic (DataModel):
+class Relic(DataModel):
     '''Void relic.'''
     tier = ForeignKeyField(RelicTier)
     code = CharField(max_length=2)
@@ -119,11 +119,11 @@ class Relic (DataModel):
         indexes = ( (('tier', 'code'), True), ) # should be "indices," bad peewee =/
 
     @property
-    def name (self):
+    def name(self):
         return "{} {}".format(self.tier, self.code)
 
     @property
-    def contents (self):
+    def contents(self):
         return (Item
                 .select()
                 .join(Containment, on=Containment.contains)
@@ -140,7 +140,7 @@ class Relic (DataModel):
 
 
 # Relation Tables #
-class BuildRequirement (RelationModel):
+class BuildRequirement(RelationModel):
     '''Relation representing an item that is required to build another item.'''
     needs = ForeignKeyField(Item, backref='product_links')
     builds = ForeignKeyField(Item, backref='component_links')
@@ -149,11 +149,11 @@ class BuildRequirement (RelationModel):
     class Meta:
         indexes = ( (('needs', 'builds'), True), )
 
-    def __str__ (self):
+    def __str__(self):
         return "{} <- {}".format(self.needs, self.builds)
 
 
-class Containment (RelationModel):
+class Containment(RelationModel):
     '''Relation representing a relic containing an item'''
     contains = ForeignKeyField(Item, backref='containments')
     inside = ForeignKeyField(Relic, backref='containments')
@@ -168,7 +168,7 @@ class Containment (RelationModel):
 
 
 # Initialization Code #
-def setup ():
+def setup():
     '''Do first-time database setup'''
     _primedb.create_tables([ItemType, Item, RelicTier, Relic, Rarity,
                             BuildRequirement, Containment])
@@ -185,37 +185,37 @@ def setup ():
     ItemType(name='Prime').save()
 
 
-def open_ ():
+def open_():
     '''Open a connection to the database.'''
     needs_setup = not os.path.isfile(DB_PATH)
     _primedb.connect()
     if needs_setup: setup()
 
 
-def close ():
+def close():
     '''Close the database connection.'''
     _primedb.close()
 
 
 # Population Code #
-def population_setup ():
+def population_setup():
     '''Call before populating the database.'''
     Containment.delete().execute()
 
 
-def population_teardown ():
+def population_teardown():
     '''Call after populating the database.'''
     pass
 
 
-def get_relic_drop_table (http):
+def get_relic_drop_table(http):
     '''Download the relic drop table from the wiki.'''
     r = http.request('GET', WIKI_HOME + '/wiki/Void_Relic/ByRewards/SimpleTable')
     table = BeautifulSoup(r.data, 'lxml', parse_only=SoupStrainer('tr'))
     return table.contents[2:]
 
 
-def process_relic_drop_table_row (row, http):
+def process_relic_drop_table_row(row, http):
     '''Process a row of the drop table.
 
     Extract the part, the prime that part builds, and the relevant relic from the row. For
@@ -270,7 +270,7 @@ def process_relic_drop_table_row (row, http):
     
     return item, product, relic
 
-def calculate_product_requirement_quantities (product):
+def calculate_product_requirement_quantities(product):
     '''Calculate how many of each part are required to build a product.
 
     Extracts information from the foundry table on the product's wiki page.
@@ -293,15 +293,15 @@ def calculate_product_requirement_quantities (product):
                 Logger.debug("Database: {} needs {} {}"
                             .format(product.name, count, part.name))
 
-def populate (http):
+def populate(http):
     '''Populate the database.'''
     table = get_relic_drop_table(http)
-    for row in table: process_relic_drop_table_row (row, http)
+    for row in table: process_relic_drop_table_row(row, http)
     for product in Item.select_all_products(): calculate_product_requirement_quantities(product)
 
 
 # Testing Code #
-def __test_population (log_level='DEBUG'):
+def __test_population(log_level='DEBUG'):
     prev_log_level = Logger.level
     Logger.setLevel(log_level)
 
@@ -318,7 +318,7 @@ def __test_population (log_level='DEBUG'):
 
     Logger.setLevel(prev_log_level)
 
-def __test_population_from_scratch (log_level='DEBUG'):
+def __test_population_from_scratch(log_level='DEBUG'):
     prev_log_level = Logger.level
     Logger.setLevel(log_level)
 
