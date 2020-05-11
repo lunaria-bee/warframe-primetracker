@@ -1,0 +1,38 @@
+<DynamicTextInput>:
+
+<SpinCounter>:
+    orientation: 'horizontal'
+    size: 64, 32
+    text_input: text_input
+    up_button: up_button
+    down_button: down_button
+    ok_button: ok_button
+    DynamicTextInput:
+        id: text_input
+        multiline: False
+        focus: True
+        size_hint_x: 0.6
+        font_size: self.height * 0.8
+        text: '0'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        input_filter: 'int'
+        on_text: if(self.text): root.value = int(self.text)
+    BoxLayout:
+        orientation: 'horizontal'
+        BoxLayout:
+            orientation: 'vertical'
+            Button:
+                text: '+'
+                on_press: root.adjust(1)
+                on_release: root.text_input.focus = True
+                id: up_button
+            Button:
+                text: '-'
+                on_press: root.adjust(-1)
+                on_release: root.text_input.focus = True
+                id: down_button
+        Button:
+            text: 'Ok'
+            on_press: text_input.dispatch('on_text_validate')
+            on_release: root.text_input.focus = True
+            id: ok_button
