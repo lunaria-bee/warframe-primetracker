@@ -29,22 +29,22 @@ class TestDb:
                                                rarity=self.rarity_common)
 
 
-def test_product_view (product_name, parent_widget):
+def test_product_view(product_name, parent_widget):
     parent_widget.clear_widgets()
     parent_widget.add_widget(ProductView(db.Item.get(name=product_name)))
 
 
-def test_component_view (component_name, parent_widget):
+def test_component_view(component_name, parent_widget):
     parent_widget.clear_widgets()
     parent_widget.add_widget(ComponentView(db.Item.get(name=component_name)))
 
 
-def test_relic_view (parent_widget):
+def test_relic_view(parent_widget):
     parent_widget.clear_widgets()
     parent_widget.add_widget(RelicView(db.Relic.select()[0]))
 
 
-def test_DbEntryListing_subclasses ():
+def test_DbEntryListing_subclasses():
     test_db = TestDb()
 
     print("===")

@@ -10,7 +10,7 @@ from kivy.properties import *
 Builder.load_file('gui/input.kv')
 
 
-class DynamicTextInput (TextInput):
+class DynamicTextInput(TextInput):
     '''TextInput with additional features for interacting with other elements.
 
     A DynamicTextInput is ideal for text that needs to modify or be modified by other
@@ -21,30 +21,30 @@ class DynamicTextInput (TextInput):
     autohighlight = BooleanProperty(True)
     '''If True, the entire text field will be highlighted when it gains focus'''
 
-    def __init__ (self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.register_event_type('on_text')
         self.register_event_type('on_focus')
         super().__init__(*args, **kwargs)
         self.bind(focus=self.focus_dispatch)
         self.bind(text=self.text_dispatch)
 
-    def focus_dispatch (self, *args):
+    def focus_dispatch(self, *args):
         self.dispatch('on_focus', self, self.focus)
 
-    def on_focus (self, instance, value):
+    def on_focus(self, instance, value):
         '''Callback for when the input gains focus.'''
         if value and self.autohighlight:
             Clock.schedule_once(lambda _: self.select_all())
 
-    def text_dispatch (self, *args):
+    def text_dispatch(self, *args):
         self.dispatch('on_text', self, self.text)
 
-    def on_text (self, *args):
+    def on_text(self, *args):
         '''Callback for when the text changes.'''
         pass
 
 
-class SpinCounter (BoxLayout):
+class SpinCounter(BoxLayout):
     '''Widget for entering integer values.
 
     A SpinCounter consists of a small text input box, a pair of buttons for increasing and
@@ -60,23 +60,23 @@ class SpinCounter (BoxLayout):
     value = BoundedNumericProperty(0, min=None, max=None)
     '''The current value of the input.'''
 
-    def __init__ (self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.reset()
 
-    def set_max (self, max_):
+    def set_max(self, max_):
         '''Set the maximum valid input value.'''
         self.property('value').set_max(self, max_)
 
-    def set_min (self, min_):
+    def set_min(self, min_):
         '''Set the minimum valid input value.'''
         self.property('value').set_min(self, min_)
 
-    def reset (self):
+    def reset(self):
         '''Reset `value` to the default'''
         self.value = self.default
 
-    def adjust (self, change):
+    def adjust(self, change):
         '''Modify the value of the input.
 
         If the attempted change would place the value out of range, do nothing.
@@ -90,7 +90,7 @@ class SpinCounter (BoxLayout):
         except ValueError:
             pass
 
-    def check_input (self):
+    def check_input(self):
         '''Check whether the current input is valid.'''
         try:
             self.value = int(self.text_input.text)
@@ -106,6 +106,6 @@ class SpinCounter (BoxLayout):
                 Logger.error("GUI-Input: Value must be between {} and {}".format(max_, min_))
             return False
 
-    def on_value (self, instance, value):
+    def on_value(self, instance, value):
         '''Callback for when the input value changes.'''
         self.text_input.text = str(self.value)

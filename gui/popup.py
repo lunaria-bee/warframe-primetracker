@@ -14,7 +14,7 @@ from kivy.properties import *
 Builder.load_file('gui/popup.kv')
 
 
-class ProgressPopup (Popup):
+class ProgressPopup(Popup):
     '''Popup window to provide information about multi-step tasks.
 
     This window will show a heading about the task, a progress bar, and additional
@@ -45,7 +45,7 @@ class ProgressPopup (Popup):
     '''Text at the end of the information for each step'''
 
 
-    def new_phase (self, phase_steps, phase_info,
+    def new_phase(self, phase_steps, phase_info,
                    step_prefix="", step_postfix=""):
         '''Start a new phase of the task.
 
@@ -70,7 +70,7 @@ class ProgressPopup (Popup):
         self.step_prefix = step_prefix
         self.step_postfix = step_postfix
 
-    def step (self, step_info="", steps=1):
+    def step(self, step_info="", steps=1):
         '''Indicate that some number of task steps have been completed.
 
         Must be called asynchronously (e.g. via Clock) for the popup to update correctly.
@@ -86,10 +86,10 @@ class ProgressPopup (Popup):
                                        self.bar.value / self.bar.max))
 
 
-class DbPopulatePopup (ProgressPopup):
+class DbPopulatePopup(ProgressPopup):
     '''Populates the Prime database.'''
 
-    def start (self):
+    def start(self):
         '''Initialize database population.
 
         Called automatically when the popup opens.
@@ -98,7 +98,7 @@ class DbPopulatePopup (ProgressPopup):
         self.phase_count = 2
         self.execution = Thread(target=partial(DbPopulatePopup.populate, self)).start()
 
-    def populate (self):
+    def populate(self):
         '''Populate the database.'''
 
         # Initial Setup #
@@ -122,10 +122,10 @@ class DbPopulatePopup (ProgressPopup):
         self.dismiss()
 
 
-class InventoryInitPopup (Popup):
+class InventoryInitPopup(Popup):
     '''Initializes inventory of primes, parts, and relics.'''
 
-    def parts_init (self):
+    def parts_init(self):
         '''Initialize inventory input.
 
         Called automatically when the popup opens.
@@ -137,7 +137,7 @@ class InventoryInitPopup (Popup):
         self.parts = list(db.Item.select_all_products() + db.Item.select_all_components())
         self.next_part()
 
-    def process_next (self, instance):
+    def process_next(self, instance):
         '''Process the next part in the database.'''
         if self.spin_counter.check_input():
             self.current_part.owned = int(self.spin_counter.text_input.text)
@@ -149,7 +149,7 @@ class InventoryInitPopup (Popup):
             self.spin_counter.reset()
         self.spin_counter.focus = True
 
-    def next_part (self):
+    def next_part(self):
         '''Get the next part to process.'''
         self.current_part = self.parts.pop(0)
         self.prime_prompt.text = "Enter number of {} in inventory:".format(self.current_part.name)

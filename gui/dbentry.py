@@ -12,7 +12,7 @@ from kivy.properties import *
 Builder.load_file('gui/dbentry.kv')
 
 
-class DbEntryListing (BoxLayout):
+class DbEntryListing(BoxLayout):
     '''Image, name and information about an database entry.
 
     Base class, not intended for direct instantiation.
@@ -28,7 +28,7 @@ class DbEntryListing (BoxLayout):
     text = StringProperty()
     '''Text describing the database entry.'''
 
-    def __init__ (self, type_filter=None, **kwargs):
+    def __init__(self, type_filter=None, **kwargs):
         # Check Type #
         if not type_filter is None\
            and 'entry' in kwargs.keys()\
@@ -42,46 +42,46 @@ class DbEntryListing (BoxLayout):
         super().__init__(**kwargs)
 
 
-class DbItemListing (DbEntryListing):
+class DbItemListing(DbEntryListing):
     '''Entry listing for Item records.'''
 
-    def __init__ (self, item, **kwargs):
+    def __init__(self, item, **kwargs):
         super().__init__(entry=item, type_filter=db.Item, **kwargs)
 
 
-class DbRelicListing (DbEntryListing):
+class DbRelicListing(DbEntryListing):
     '''Entry listing for Relic records/'''
 
-    def __init__ (self, relic, **kwargs):
+    def __init__(self, relic, **kwargs):
         super().__init__(entry=relic, type_filter=db.Relic, **kwargs)
 
 
-class DbContainmentListing (DbEntryListing):
+class DbContainmentListing(DbEntryListing):
     '''Entry listing for Containment records.
 
     Base class, not intended for direct instantiation.
 
     '''
 
-    def __init__ (self, containment, **kwargs):
+    def __init__(self, containment, **kwargs):
         super().__init__(entry=containment,
                          type_filter=db.Containment, **kwargs)
 
 
-class DbContainmentForContentsListing (DbContainmentListing):
+class DbContainmentForContentsListing(DbContainmentListing):
     '''Entry listing for showing which Items a Relic contains.'''
     pass
 
 
-class DbContainmentForRelicListing (DbContainmentListing):
+class DbContainmentForRelicListing(DbContainmentListing):
     '''Entry listing for showing which Relics contain an Item.'''
     pass
 
 
-class DbEntryList (BoxLayout):
+class DbEntryList(BoxLayout):
     '''Container for DbEntryListings.'''
 
-    def add (self, listing):
+    def add(self, listing):
         '''Add a new DbEntryListing to the list.'''
 
         # Check type #
@@ -98,15 +98,15 @@ class DbEntryList (BoxLayout):
         return listing # TODO remove once no longer required
 
 
-class DbEntryListTab (TabbedPanelItem):
+class DbEntryListTab(TabbedPanelItem):
     '''Tab for containing a DbEntryList.'''
 
-    def add (self, item):
+    def add(self, item):
         '''Add a new DbEntryListing to the contained DbEntryList.'''
         self.ids.item_list.add(item)
 
 
-class DbEntryDetailView (BoxLayout):
+class DbEntryDetailView(BoxLayout):
     '''Shows detailed information about a database entry.
 
     A DbEntryDetailView consists primarily of DbEntryListings, with a prominently
@@ -117,10 +117,10 @@ class DbEntryDetailView (BoxLayout):
     item_count = NumericProperty(1)
 
 
-class ProductView (DbEntryDetailView):
+class ProductView(DbEntryDetailView):
     '''Shows information about a product (e.g. a built prime).'''
 
-    def __init__ (self, product, *args, **kwargs):
+    def __init__(self, product, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ids.heading.entry = product
         self.ids.component_tab = DbEntryListTab(text = "Components")
@@ -130,10 +130,10 @@ class ProductView (DbEntryDetailView):
             self.ids.component_tab.add(DbItemListing(component))
 
 
-class ComponentView (DbEntryDetailView):
+class ComponentView(DbEntryDetailView):
     '''Shows information about a component (e.g. a prime part).'''
 
-    def __init__ (self, component, *args, **kwargs):
+    def __init__(self, component, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ids.heading.entry = component
 
@@ -151,10 +151,10 @@ class ComponentView (DbEntryDetailView):
         self.ids.sublist_tabs.default_tab = self.ids.product_tab
 
 
-class RelicView (DbEntryDetailView):
+class RelicView(DbEntryDetailView):
     '''Shows information about a relic.'''
 
-    def __init__ (self, relic, *args, **kwargs):
+    def __init__(self, relic, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ids.heading.entry = relic
 
