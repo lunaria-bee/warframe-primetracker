@@ -22,7 +22,7 @@ $ python3 -i primedb.py
 The classes in primedb.py that represent the database tables have an assortment
 of virtual properties that can provide some limited imformation. Refer to the
 [peewee docs](http://docs.peewee-orm.com/en/latest/peewee/querying.html) for
-instructions on gaining more detailed information.
+information about how to write queries.
 
 ## Dependencies
 - [python3 (>3.7.2)](https://www.python.org/downloads/)
