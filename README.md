@@ -1,5 +1,7 @@
 # warframe-primetracker
-Database to track Prime acquisition in Warframe
+Database to track Prime acquisition in Warframe. This program never worked well
+to begin with, and will probably remain abandoned, as I haven't played Warframe
+regularly in years.
 
 ## Use
 Use instructions are given for a *nix environment, because I'm a fool who plays
